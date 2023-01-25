@@ -25,9 +25,9 @@ export function Todolist(props: PropsType) {
     const [error, setError] = useState(false)
     const [clickedButton, setClickedButton] = useState('all')
 
-    const updateIsDoneHandler = (elId: string, newIsDone: boolean) => { //скопировали типизацию из PropsType CheckBox
-        props.updateIsDone(elId, newIsDone)
-    }
+    // const updateIsDoneHandler = (elId: string, newIsDone: boolean) => { //скопировали типизацию из PropsType CheckBox
+    //     props.updateIsDone(elId, newIsDone)
+    // }
 
     const mappedTasks = props.tasks.map((el, index) => {    //вінесли "по-челоловечески" ))) map
         const removeTaskHandler = () => {
@@ -35,18 +35,18 @@ export function Todolist(props: PropsType) {
         }
 
         //удали стр 34-36 при выносе чек бокс в отдельную компоненту, переписали по новой строчкой ниже
-        // const updateIsDoneHandler = (event: ChangeEvent<HTMLInputElement>) => {     // убираем ошибки красные в конс лог в хром, т.к. isDone жестко прошито (стоит или true или false). переносим в App как updateIsDone
-        //     props.updateIsDone(el.id, event.currentTarget.checked)
-        // }
-
+        const updateIsDoneHandler = (event: ChangeEvent<HTMLInputElement>) => {     // убираем ошибки красные в конс лог в хром, т.к. isDone жестко прошито (стоит или true или false). переносим в App как updateIsDone
+            props.updateIsDone(el.id, event.currentTarget.checked)
+        }
+        //
         // const updateIsDoneHandler = (newIsDone: boolean) => { //скопировали типизацию из PropsType CheckBox
         //   props.updateIsDone(el.id, newIsDone)
         // }
 
         return (
             <li key={el.id} className={el.isDone ? styles.isDone : ''}>
-                <CheckBox checked={el.isDone} callBack={(newIsDone) => updateIsDoneHandler(el.id, newIsDone)}/>
-                {/*<input type="checkbox" onChange={updateIsDoneHandler} checked={el.isDone} //// Перенесли в отжельную компоненту CheckBox/>*/}
+                {/*<CheckBox checked={el.isDone} callBack={(newIsDone) => updateIsDoneHandler(el.id, newIsDone)}/>*/}
+                <input type="checkbox" onChange={updateIsDoneHandler} checked={el.isDone}/>
                 <span>{el.title}</span>
                 <button onClick={removeTaskHandler}>X</button>
                 {/*<button onClick={()=>removeTaskHandler(el.id)}>X</button>*/}
@@ -87,12 +87,12 @@ export function Todolist(props: PropsType) {
 
 
     // const changeFilterTsarHandler = (filterValue: FilterValueTypes, musor?: number) => {
-    const changeFilterTsarHandler = (filterValue: FilterValueTypes) => {
-        {
-            props.filterTasks(filterValue)
-            setClickedButton(filterValue)
-        }     // обьединение трех батонов в одит. Ставим filterValue т.к. нужно несколько аргументов поставить (Алл, Актив, Соиплитед), а похволяетсятся только один
-    }
+    // const changeFilterTsarHandler = (filterValue: FilterValueTypes) => {
+    //     {
+    //         props.filterTasks(filterValue)
+    //         setClickedButton(filterValue)
+    //     }     // обьединение трех батонов в одит. Ставим filterValue т.к. нужно несколько аргументов поставить (Алл, Актив, Соиплитед), а похволяетсятся только один
+    // }
 
     const onKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
@@ -115,18 +115,21 @@ export function Todolist(props: PropsType) {
 
     return <div>
         <h3>{props.title}</h3>
-        <div><input className={error ? styles.error : ''} //вводим красную рамку, если будет невверный текст (пустота)
-                    onChange={onChangeHandler}
-                    value={title}
-                    onKeyDown={onKeyDownHandler}/>
+        <div>
+            <input value={title}
+                   onChange={onChangeHandler}
+                   onKeyDown={onKeyDownHandler}
+                   className={error ? styles.error : ''} //вводим красную рамку, если будет невверный текст (пустота)
+            />
+
 
             {/*onChangeHandler выше не ф-ция, а ссылка на ф-цию. Это как указатель "город Минск"*/}
             {/*<input onChange={(event) => setTitle(event.currentTarget.value)}/>//вынесли вверх из инпута функцию добавления текста*/}
             {/*<Button buttonName={'+'} callBack={() => addTaskHandler()}/>*/}
             <button onClick={() => addTaskHandler()}>+</button>
             {/*<button onClick={(event) => props.addTask(title)}>+</button>*/}
+            {error && <div className={styles.errorMessage}>Title is required</div>}
         </div>
-        {error && <div className={styles.errorMessage}>Title is required</div>}
         <ul>
             {mappedTasks}
             {/*{props.tasks.map((el, index) => {*/}
@@ -148,14 +151,12 @@ export function Todolist(props: PropsType) {
             {/*<li><input type="checkbox" checked={props.tasks[2].isDone}/> <span>{props.tasks[2].title}</span></li>*/}
         </ul>
         <div>
-            <button className={clickedButton === 'all' ? styles.activeFilter : ''} onClick={onAllClickHandler}>All
-            </button>
+            <button className={clickedButton === 'all' ? styles.activeFilter : ''}
+                    onClick={onAllClickHandler}>All</button>
             <button className={clickedButton === 'active' ? styles.activeFilter : ''}
-                    onClick={onActiveClickHandler}>Active
-            </button>
+                    onClick={onActiveClickHandler}>Active</button>
             <button className={clickedButton === 'completed' ? styles.activeFilter : ''}
-                    onClick={onCompletedClickHandler}>Completed
-            </button>
+                    onClick={onCompletedClickHandler}>Completed</button>
             {/*<Button buttonName={'All'} callBack={() => changeFilterTsarHandler('all')}/>*/}
             {/*<Button buttonName={'Active'} callBack={() => changeFilterTsarHandler('active')}/>*/}
             {/*<Button buttonName={'Completed'} callBack={() => changeFilterTsarHandler('completed')}/>*/}
