@@ -14,10 +14,10 @@ type PropsType = {
     todoListId: string
     title: string
     tasks: Array<TaskType>
-    removeTask: (taskID: string) => void
+    removeTask: (todoListId: string, taskID: string) => void
     filterTasks: (todoListId: string, value: FilterValueTypes) => void
-    addTask: (valueTitle: string) => void
-    updateIsDone: (taskId: string, newIsDone: boolean) => void
+    addTask: (todoListId: string, valueTitle: string) => void
+    updateIsDone: (todoListId: string, taskId: string, newIsDone: boolean) => void
     filterValueKey: FilterValueTypes
 }
 
@@ -32,12 +32,12 @@ export function Todolist(props: PropsType) {
 
     const mappedTasks = props.tasks.map((el, index) => {    //вінесли "по-челоловечески" ))) map
         const removeTaskHandler = () => {
-            props.removeTask(el.id)
+            props.removeTask(props.todoListId, el.id)
         }
 
         //удали стр 34-36 при выносе чек бокс в отдельную компоненту, переписали по новой строчкой ниже
         const updateIsDoneHandler = (event: ChangeEvent<HTMLInputElement>) => {     // убираем ошибки красные в конс лог в хром, т.к. isDone жестко прошито (стоит или true или false). переносим в App как updateIsDone
-            props.updateIsDone(el.id, event.currentTarget.checked)
+            props.updateIsDone(props.todoListId, el.id, event.currentTarget.checked)
         }
         //
         // const updateIsDoneHandler = (newIsDone: boolean) => { //скопировали типизацию из PropsType CheckBox
@@ -58,7 +58,7 @@ export function Todolist(props: PropsType) {
 
     const addTaskHandler = () => {
         if (title.trim() !== '') { //добавили защиту от возможности добавления в input поля без текста (если "+" нажимаем без текста)
-            props.addTask(title.trim()) //добавили защиту от возможности ввода текста с пробелами перед/после
+            props.addTask(props.todoListId, title.trim()) //добавили защиту от возможности ввода текста с пробелами перед/после
         } else {
             setError(true) // если пытаемся ввести пробел или пустую строку, выводит красный текст Title is required
         }
