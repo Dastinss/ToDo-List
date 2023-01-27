@@ -1,9 +1,13 @@
 import React, {useState} from 'react';
 import './App.css';
-import {TaskType, Todolist} from "./Todolist";
+import {Todolist} from "./Todolist";
 import {v1} from "uuid";
 
 export type FilterValueTypes = 'all' | 'active' | 'completed'
+
+// type TaskType1 = { // типизация ключа
+//     [key: string] : TaskType1[]
+// }
 
 type TodoListType = { id: string, title: string, filter: FilterValueTypes } // добавили новый массив в уроке 5
 
@@ -50,6 +54,13 @@ function App() {
     //     {id: v1(), title: "ReactAPI", isDone: true},
     //     {id: v1(), title: "GraphQL", isDone: false},
     // ])
+
+    const removeTodoList = (todoListId: string) => {
+        // console.log(todoListId)
+        setTodoLists(todoLists.filter((el) => el.id !== todoListId))
+        delete tasks1[todoListId] // удаляем индекс массива (т.е. свойство из объекта) ?
+        console.log(tasks1)
+    }
 
     const updateIsDone = (todoListId: string, taskId: string, newIsDone: boolean) => { // у.5 : добавили глобальную Id (номер подьезда перед номером квартиры)  и перенесли его в тапизацию в Тудулист
         // чтобы привызяать к конкретной строке из п.17 указваем id & isDone. Цель - вяжем єту функцию у тегу updateIsDoneHandler из TodoList
@@ -118,6 +129,7 @@ function App() {
                         addTask={addTask}
                         updateIsDone={updateIsDone}
                         filterValueKey={el.filter} // замениили filterValueKey на filter из второго массива
+                        removeTodoList={removeTodoList}
                     />
                 )
             })}

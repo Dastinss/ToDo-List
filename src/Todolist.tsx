@@ -1,8 +1,8 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from "react";
 import {FilterValueTypes} from "./App";
-import {Button} from "./components/Button";
+//import {Button} from "./components/Button";
 import styles from "./Todolist.module.css"
-import {CheckBox} from "./components/CheckBox";
+//import {CheckBox} from "./components/CheckBox";
 
 export type TaskType = {
     id: string
@@ -19,6 +19,7 @@ type PropsType = {
     addTask: (todoListId: string, valueTitle: string) => void
     updateIsDone: (todoListId: string, taskId: string, newIsDone: boolean) => void
     filterValueKey: FilterValueTypes
+    removeTodoList: (todoListId: string)=> void
 }
 
 export function Todolist(props: PropsType) {
@@ -114,15 +115,21 @@ export function Todolist(props: PropsType) {
         setClickedButton('completed')
     }
 
+    const removeTodoListHandler = () => { //создаем ф-цию по удалению ТоДоЛиста
+        props.removeTodoList(props.todoListId)
+    }
+
     return <div>
-        <h3>{props.title}</h3>
+        <h3>
+            {props.title}
+            <button onClick={removeTodoListHandler}>X</button>
+        </h3>
         <div>
             <input value={title}
                    onChange={onChangeHandler}
                    onKeyDown={onKeyDownHandler}
                    className={error ? styles.error : ''} //вводим красную рамку, если будет невверный текст (пустота)
             />
-
 
             {/*onChangeHandler выше не ф-ция, а ссылка на ф-цию. Это как указатель "город Минск"*/}
             {/*<input onChange={(event) => setTitle(event.currentTarget.value)}/>//вынесли вверх из инпута функцию добавления текста*/}
