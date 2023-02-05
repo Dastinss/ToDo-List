@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import './App.css';
 import {Todolist} from "./Todolist";
 import {v1} from "uuid";
+import {AddItemForm} from "./components/AddItemForm";
 
 export type FilterValueTypes = 'all' | 'active' | 'completed'
 
@@ -31,11 +32,11 @@ function App() {
             {id: v1(), title: "GraphQL", isDone: false},
         ],
         [todoListID2]: [
-            {id: v1(), title: "HTML&CSS2", isDone: true},
-            {id: v1(), title: "JS2", isDone: true},
-            {id: v1(), title: "ReactJS2", isDone: false},
-            {id: v1(), title: "ReactAPI2", isDone: false},
-            {id: v1(), title: "GraphQL2", isDone: false},
+            {id: v1(), title: "Milk", isDone: true},
+            {id: v1(), title: "React Book", isDone: true},
+            {id: v1(), title: "Beer", isDone: false},
+            {id: v1(), title: "Bread", isDone: false},
+            {id: v1(), title: "Lap Top", isDone: false},
         ],
     })
 
@@ -62,9 +63,6 @@ function App() {
         console.log(tasks1)
     }
 
-
-
-
     const updateIsDone = (todoListId: string, taskId: string, newIsDone: boolean) => { // у.5 : добавили глобальную Id (номер подьезда перед номером квартиры)  и перенесли его в тапизацию в Тудулист
         // чтобы привызяать к конкретной строке из п.17 указваем id & isDone. Цель - вяжем єту функцию у тегу updateIsDoneHandler из TodoList
         // setTask1 (tasks1.map(el=> el.id === taskId ? {...el, isDone: newIsDone}  : el ))
@@ -74,7 +72,7 @@ function App() {
 
     const addTask = (todoListId: string, valueTitle: string) => {   // у.5 : добавили глобальную Id (номер подьезда перед номером квартиры)  и перенесли его в тапизацию в Тудулист
         //создаем ф-цию АддТаск для того, чтобі с поля input через + вводить новые значения в строки ниже
-        // далее из ТудуЛист переносим вводиміе значение в консолькоторую в последствии меняем на setTask1
+        // далее из ТудуЛист переносим вводиміе значение в консоль которую в последствии меняем на setTask1
         // const newType: TaskType = {id: v1(), title: valueTitle, isDone: false}; //добавляем вводиміе в инпут данніе как строку ниже тайловских. Ввод TaskType при этом это типизация!!
         //
         // setTask1([newType,...tasks1]) //"раздели" старый массив, т.е. достали яблоки из ящика, добавили новый эллемент и снова обернули в массивЕсли поставить вместо setTask1 - consol.log, то текст останется в полу инпут (так біло до setTask1)
@@ -109,7 +107,9 @@ function App() {
     // делее строка 75 {arrViktory.map((el) => { ....... и т.д.
 
     return (
+
         <div className="App">
+            <AddItemForm callBack={()=>{}} todoListId={'sdfsdfas'}/>
             {todoLists.map((el) => {
                 // let filteredTasks = tasks1;
                 let filteredTasks = tasks1[el.id];

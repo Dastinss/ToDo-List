@@ -2,6 +2,7 @@ import React, {ChangeEvent, KeyboardEvent, useState} from "react";
 import {FilterValueTypes} from "./App";
 //import {Button} from "./components/Button";
 import styles from "./Todolist.module.css"
+import {AddItemForm} from "./components/AddItemForm";
 //import {CheckBox} from "./components/CheckBox";
 
 export type TaskType = {
@@ -23,8 +24,9 @@ type PropsType = {
 }
 
 export function Todolist(props: PropsType) {
-    let [title, setTitle] = useState(' ')   // создаем хук которій нам выводит из инпут введенный текст в строку ниже
-    const [error, setError] = useState(false)
+    //перенесли все в новую компоненту AddItemForm
+    // let [title, setTitle] = useState(' ')   // создаем хук которій нам выводит из инпут введенный текст в строку ниже
+    // const [error, setError] = useState(false)
     const [clickedButton, setClickedButton] = useState('all')
 
     // const updateIsDoneHandler = (elId: string, newIsDone: boolean) => { //скопировали типизацию из PropsType CheckBox
@@ -57,19 +59,19 @@ export function Todolist(props: PropsType) {
         )
     })
 
-    const addTaskHandler = () => {
-        if (title.trim() !== '') { //добавили защиту от возможности добавления в input поля без текста (если "+" нажимаем без текста)
-            props.addTask(props.todoListId, title.trim()) //добавили защиту от возможности ввода текста с пробелами перед/после
-        } else {
-            setError(true) // если пытаемся ввести пробел или пустую строку, выводит красный текст Title is required
-        }
-        setTitle(' ') // обнуляем поле инпут после ввода текста и нажатия "+"
-    }
-
-    const onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
-        setTitle(event.currentTarget.value)
-        setError(false) // если начинаем что то путнее печатать после выведения красного текста Title is required, то этот красный текст исчезает
-    }
+    // const addTaskHandler = () => { // перенесли в компоненту AddItemForm
+    //     if (title.trim() !== '') { //добавили защиту от возможности добавления в input поля без текста (если "+" нажимаем без текста)
+    //         props.addTask(props.todoListId, title.trim()) //добавили защиту от возможности ввода текста с пробелами перед/после
+    //     } else {
+    //         setError(true) // если пытаемся ввести пробел или пустую строку, выводит красный текст Title is required
+    //     }
+    //     setTitle(' ') // обнуляем поле инпут после ввода текста и нажатия "+"
+    // }
+    //
+    // const onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
+    //     setTitle(event.currentTarget.value)
+    //     setError(false) // если начинаем что то путнее печатать после выведения красного текста Title is required, то этот красный текст исчезает
+    // }
 
     // const filterTasksHandlerAll = () => {
     //     props.filterTasks('all')
@@ -96,11 +98,11 @@ export function Todolist(props: PropsType) {
     //     }     // обьединение трех батонов в одит. Ставим filterValue т.к. нужно несколько аргументов поставить (Алл, Актив, Соиплитед), а похволяетсятся только один
     // }
 
-    const onKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
-        if (event.key === 'Enter') {
-            addTaskHandler()       // после if идет условие, которое в инпуте реагирует на кнопку Ентер!
-        }
-    }
+    // const onKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => { // перенесли в компоненту AddItemForm
+    //     if (event.key === 'Enter') {
+    //         addTaskHandler()       // после if идет условие, которое в инпуте реагирует на кнопку Ентер!
+    //     }
+    // }
 
     const onAllClickHandler = () => {
         props.filterTasks(props.todoListId, 'all')
@@ -124,20 +126,21 @@ export function Todolist(props: PropsType) {
             {props.title}
             <button onClick={removeTodoListHandler}>X</button>
         </h3>
-        <div>
-            <input value={title}
-                   onChange={onChangeHandler}
-                   onKeyDown={onKeyDownHandler}
-                   className={error ? styles.error : ''} //вводим красную рамку, если будет невверный текст (пустота)
-            />
+        {/*<div> передали В новую компоненту AddItemForm*/}
+        {/*    <input value={title}*/}
+        {/*           onChange={onChangeHandler}*/}
+        {/*           onKeyDown={onKeyDownHandler}*/}
+        {/*           className={error ? styles.error : ''} //вводим красную рамку, если будет невверный текст (пустота)*/}
+        {/*    />*/}
 
-            {/*onChangeHandler выше не ф-ция, а ссылка на ф-цию. Это как указатель "город Минск"*/}
-            {/*<input onChange={(event) => setTitle(event.currentTarget.value)}/>//вынесли вверх из инпута функцию добавления текста*/}
-            {/*<Button buttonName={'+'} callBack={() => addTaskHandler()}/>*/}
-            <button onClick={() => addTaskHandler()}>+</button>
-            {/*<button onClick={(event) => props.addTask(title)}>+</button>*/}
-            {error && <div className={styles.errorMessage}>Title is required</div>}
-        </div>
+        {/*    /!*onChangeHandler выше не ф-ция, а ссылка на ф-цию. Это как указатель "город Минск"*!/*/}
+        {/*    /!*<input onChange={(event) => setTitle(event.currentTarget.value)}/>//вынесли вверх из инпута функцию добавления текста*!/*/}
+        {/*    /!*<Button buttonName={'+'} callBack={() => addTaskHandler()}/>*!/*/}
+        {/*    <button onClick={() => addTaskHandler()}>+</button>*/}
+        {/*    /!*<button onClick={(event) => props.addTask(title)}>+</button>*!/*/}
+        {/*    {error && <div className={styles.errorMessage}>Title is required</div>}*/}
+        {/*</div>*/}
+        <AddItemForm callBack={props.addTask} todoListId={props.todoListId}/>
         <ul>
             {mappedTasks}
             {/*{props.tasks.map((el, index) => {*/}
