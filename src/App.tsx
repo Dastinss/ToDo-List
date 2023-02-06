@@ -62,15 +62,12 @@ function App() {
         console.log(tasks1)
     }
 
-
-
-
     const updateIsDone = (todoListId: string, taskId: string, newIsDone: boolean) => { // у.5 : добавили глобальную Id (номер подьезда перед номером квартиры)  и перенесли его в тапизацию в Тудулист
         // чтобы привызяать к конкретной строке из п.17 указваем id & isDone. Цель - вяжем єту функцию у тегу updateIsDoneHandler из TodoList
         // setTask1 (tasks1.map(el=> el.id === taskId ? {...el, isDone: newIsDone}  : el ))
         //console.log(taskId, newIsDone) было перед тем, как прописали строку выше, которая начала ставит галочки сразу в браузере
         setTask1({...tasks1, [todoListId]:tasks1[todoListId].map((el) => el.id === taskId ? {...el, isDone: newIsDone} : el)//меняем статус квартиры. копия здоровой мартрешки {...tasks1}, т.е. взяли дом (ВСЕ подьезды); создали старый\новый ключ [todoListId], в виде значения выбираем массив (дом) tasks1, в котором выбрали элемент1 (подьезд) [todoListId] и далее квартиру из которой нужно кого-то віселить () (удалить какойто таск) через метод filter
-    })};
+        })};
 
     const addTask = (todoListId: string, valueTitle: string) => {   // у.5 : добавили глобальную Id (номер подьезда перед номером квартиры)  и перенесли его в тапизацию в Тудулист
         //создаем ф-цию АддТаск для того, чтобі с поля input через + вводить новые значения в строки ниже
@@ -99,7 +96,7 @@ function App() {
     // console.log(filterKey)
 
     const filterTasks = (todoListId: string, value: FilterValueTypes) => {       //в ф-цию filterTasks приходит значение - название кнопки FilterValueTypes
-                                                                                 // setfilterValueKey(value) // убрали єту ф-цию, т.к. берем фильтр напрямую со второго массива (вместо filterValueKey берем filter)
+        // setfilterValueKey(value) // убрали єту ф-цию, т.к. берем фильтр напрямую со второго массива (вместо filterValueKey берем filter)
         setTodoLists(todoLists.map(el => el.id === todoListId ? {...el, filter: value} : el)) //1.создали новый массив с помощью map (єто тот же массив) 2. вызвали колл бек 3.определили какой элемент массива взять (0 или 1) 4. если нашел нужный элемент, то перезаписываем старый элемент,НО! перезаписываем (меняем) новое значение в старое название filter, т.е. вместо 'all' записали 'value' 5.если не нашли нужный эелемент, перезаписываем его без изменений
     }
 
