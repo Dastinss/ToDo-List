@@ -2,8 +2,7 @@ import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
 import styles from "../Todolist.module.css";
 
 type PropsType = {
-    callBack: (todoListId: string, valueTitle: string) => void
-    todoListId: string
+    callBack: (valueTitle: string) => void
 }
 
 export const AddItemForm = (props: PropsType) => {
@@ -12,7 +11,7 @@ export const AddItemForm = (props: PropsType) => {
 
     const addTaskHandler = () => {
         if (title.trim() !== '') { //добавили защиту от возможности добавления в input поля без текста (если "+" нажимаем без текста)
-            props.callBack(props.todoListId, title.trim()) //добавили защиту от возможности ввода текста с пробелами перед/после
+            props.callBack( title.trim() ) //добавили защиту от возможности ввода текста с пробелами перед/после
         } else {
             setError(true) // если пытаемся ввести пробел или пустую строку, выводит красный текст Title is required
         }

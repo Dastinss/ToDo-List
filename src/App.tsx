@@ -83,6 +83,12 @@ function App() {
     // const [filterValueKey, setfilterValueKey] = useState<FilterValueTypes>('all') //засетаем filterKey в глобальній ЮсСтейт и его имя становится глобальным, т.к его имя ренее не видели разные блоки кода
     // убрали строку выше, т.к. в новом массиве todoLists уже есть метод filter
 
+    const addTodoList = (newTitle: string) => { //создаем новый (третий) ТудуЛист урок 6
+        let newID = v1();
+        let newTodo: TodoListType  = {id: newID, title: newTitle, filter: 'all'};
+        setTodoLists([newTodo, ...todoLists])
+    }
+
     const removeTask = (todoListId: string, taskId: string) => { // у.5 : добавили глобальную Id (номер подьезда перед номером квартиры) и перенесли его в тапизацию в Тудулист
         // tasks1 = tasks1.filter((el) => el.id !== taskID)
         // setTask1(tasks1.filter((el) => el.id !== taskID))
@@ -109,7 +115,7 @@ function App() {
     return (
 
         <div className="App">
-            <AddItemForm callBack={()=>{}} todoListId={'sdfsdfas'}/>
+            <AddItemForm callBack={()=>{}} />
             {todoLists.map((el) => {
                 // let filteredTasks = tasks1;
                 let filteredTasks = tasks1[el.id];

@@ -20,7 +20,7 @@ type PropsType = {
     addTask: (todoListId: string, valueTitle: string) => void
     updateIsDone: (todoListId: string, taskId: string, newIsDone: boolean) => void
     filterValueKey: FilterValueTypes
-    removeTodoList: (todoListId: string)=> void
+    removeTodoList: (todoListId: string) => void
 }
 
 export function Todolist(props: PropsType) {
@@ -109,16 +109,20 @@ export function Todolist(props: PropsType) {
         setClickedButton('all')
     }
     const onActiveClickHandler = () => {
-        props.filterTasks(props.todoListId,'active')
+        props.filterTasks(props.todoListId, 'active')
         setClickedButton('active')
     }
     const onCompletedClickHandler = () => {
-        props.filterTasks(props.todoListId,'completed')
+        props.filterTasks(props.todoListId, 'completed')
         setClickedButton('completed')
     }
 
     const removeTodoListHandler = () => { //создаем ф-цию по удалению ТоДоЛиста
         props.removeTodoList(props.todoListId)
+    }
+
+    const addTaskHandler2 = (title: string) => {
+        props.addTask(title, props.todoListId)
     }
 
     return <div>
@@ -140,7 +144,7 @@ export function Todolist(props: PropsType) {
         {/*    /!*<button onClick={(event) => props.addTask(title)}>+</button>*!/*/}
         {/*    {error && <div className={styles.errorMessage}>Title is required</div>}*/}
         {/*</div>*/}
-        <AddItemForm callBack={props.addTask} todoListId={props.todoListId}/>
+        <AddItemForm callBack={addTaskHandler2}/>
         <ul>
             {mappedTasks}
             {/*{props.tasks.map((el, index) => {*/}
@@ -163,11 +167,14 @@ export function Todolist(props: PropsType) {
         </ul>
         <div>
             <button className={clickedButton === 'all' ? styles.activeFilter : ''}
-                    onClick={onAllClickHandler}>All</button>
+                    onClick={onAllClickHandler}>All
+            </button>
             <button className={clickedButton === 'active' ? styles.activeFilter : ''}
-                    onClick={onActiveClickHandler}>Active</button>
+                    onClick={onActiveClickHandler}>Active
+            </button>
             <button className={clickedButton === 'completed' ? styles.activeFilter : ''}
-                    onClick={onCompletedClickHandler}>Completed</button>
+                    onClick={onCompletedClickHandler}>Completed
+            </button>
             {/*<Button buttonName={'All'} callBack={() => changeFilterTsarHandler('all')}/>*/}
             {/*<Button buttonName={'Active'} callBack={() => changeFilterTsarHandler('active')}/>*/}
             {/*<Button buttonName={'Completed'} callBack={() => changeFilterTsarHandler('completed')}/>*/}
