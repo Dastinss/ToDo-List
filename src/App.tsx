@@ -32,7 +32,7 @@ function App() {
             {id: v1(), title: "GraphQL", isDone: false},
         ],
         [todoListID2]: [
-            {id: v1(), title: "HTML&CSS2", isDone: true},
+            {id: v1(), title: "Milk", isDone: true},
             {id: v1(), title: "JS2", isDone: true},
             {id: v1(), title: "ReactJS2", isDone: false},
             {id: v1(), title: "ReactAPI2", isDone: false},
