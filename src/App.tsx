@@ -33,7 +33,7 @@ function App() {
         ],
         [todoListID2]: [
             {id: v1(), title: "Milk", isDone: true},
-            {id: v1(), title: "JS2", isDone: true},
+            {id: v1(), title: "Book", isDone: true},
             {id: v1(), title: "ReactJS2", isDone: false},
             {id: v1(), title: "ReactAPI2", isDone: false},
             {id: v1(), title: "GraphQL2", isDone: false},
@@ -84,9 +84,16 @@ function App() {
 
     const addTodoList = (newTitle: string) => {
         let newID = v1();
-        let newTodo: TodoListType = {id: newID, title: newTitle, filter: 'all'};
+        let newTodo: TodoListType = {id: newID, title: newTitle, filter: 'all'}; // для пустого ТудуЛиста
         setTodoLists([newTodo, ...todoLists])
-        setTask1({...tasks1, [newID]: []})
+        setTask1({
+                ...tasks1,
+                [newID]: [
+                    {id: v1(), title: "Bear", isDone: true},
+                    {id: v1(), title: "Coca-Cola", isDone: true}
+                ]
+            }
+        )
     }
 
     // const [filterValueKey, setfilterValueKey] = useState<FilterValueTypes>('all') //засетаем filterKey в глобальній ЮсСтейт и его имя становится глобальным, т.к его имя ренее не видели разные блоки кода

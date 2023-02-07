@@ -3,6 +3,7 @@ import {FilterValueTypes} from "./App";
 //import {Button} from "./components/Button";
 import styles from "./Todolist.module.css"
 import {AddItemForm} from "./components/AddItemForm";
+import {EditableSpan} from "./components/EditableSpan";
 //import {CheckBox} from "./components/CheckBox";
 
 export type TaskType = {
@@ -50,7 +51,8 @@ export function Todolist(props: PropsType) {
             <li key={el.id} className={el.isDone ? styles.isDone : ''}>
                 {/*<CheckBox checked={el.isDone} callBack={(newIsDone) => updateIsDoneHandler(el.id, newIsDone)}/>*/}
                 <input type="checkbox" onChange={updateIsDoneHandler} checked={el.isDone}/>
-                <span>{el.title}</span>
+                {/*<span>{el.title}</span> // перенесли в новую компоненту EditableSpan*/}
+                <EditableSpan OLDtitle = {el.title}/>
                 <button onClick={removeTaskHandler}>X</button>
                 {/*<button onClick={()=>removeTaskHandler(el.id)}>X</button>*/}
                 {/*<Button buttonName={'X'} callBack={removeTaskHandler}/>*/}
