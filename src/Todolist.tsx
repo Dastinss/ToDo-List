@@ -2,6 +2,7 @@ import React, {ChangeEvent, KeyboardEvent, useState} from "react";
 import {FilterValueTypes} from "./App";
 //import {Button} from "./components/Button";
 import styles from "./Todolist.module.css"
+import {AddItemForm} from "./components/AddItemForm";
 //import {CheckBox} from "./components/CheckBox";
 
 export type TaskType = {
@@ -16,15 +17,15 @@ type PropsType = {
     tasks: Array<TaskType>
     removeTask: (todoListId: string, taskID: string) => void
     filterTasks: (todoListId: string, value: FilterValueTypes) => void
-    addTask: (todoListId: string, valueTitle: string) => void
+    addTask: (valueTitle: string, todoListId: string) => void
     updateIsDone: (todoListId: string, taskId: string, newIsDone: boolean) => void
     filterValueKey: FilterValueTypes
     removeTodoList: (todoListId: string)=> void
 }
 
 export function Todolist(props: PropsType) {
-    let [title, setTitle] = useState(' ')   // создаем хук которій нам выводит из инпут введенный текст в строку ниже
-    const [error, setError] = useState(false)
+    // let [title, setTitle] = useState(' ')   // создаем хук которій нам выводит из инпут введенный текст в строку ниже
+    // const [error, setError] = useState(false)
     const [clickedButton, setClickedButton] = useState('all')
 
     // const updateIsDoneHandler = (elId: string, newIsDone: boolean) => { //скопировали типизацию из PropsType CheckBox
@@ -57,50 +58,25 @@ export function Todolist(props: PropsType) {
         )
     })
 
-    const addTaskHandler = () => {
-        if (title.trim() !== '') { //добавили защиту от возможности добавления в input поля без текста (если "+" нажимаем без текста)
-            props.addTask(props.todoListId, title.trim()) //добавили защиту от возможности ввода текста с пробелами перед/после
-        } else {
-            setError(true) // если пытаемся ввести пробел или пустую строку, выводит красный текст Title is required
-        }
-        setTitle(' ') // обнуляем поле инпут после ввода текста и нажатия "+"
-    }
-
-    const onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
-        setTitle(event.currentTarget.value)
-        setError(false) // если начинаем что то путнее печатать после выведения красного текста Title is required, то этот красный текст исчезает
-    }
-
-    // const filterTasksHandlerAll = () => {
-    //     props.filterTasks('all')
-    // }
-    //
-    // const filterTasksHandlerActive = () => {
-    //     props.filterTasks('active')
-    // }
-    //
-    // const filterTasksHandlerCompleted = () => {
-    //     props.filterTasks('completed')
+    // const addTask = () => {
+    //     if (title.trim() !== '') { //добавили защиту от возможности добавления в input поля без текста (если "+" нажимаем без текста)
+    //         props.addTask(props.todoListId, title.trim()) //добавили защиту от возможности ввода текста с пробелами перед/после
+    //     } else {
+    //         setError(true) // если пытаемся ввести пробел или пустую строку, выводит красный текст Title is required
+    //     }
+    //     setTitle(' ') // обнуляем поле инпут после ввода текста и нажатия "+"
     // }
 
-    // const removeTaskHandler = (elId: string) => {     //наша ф-ция ждет аргумент elId: string, т.о. на строке 69 превращаем ссілку на ф-цию в ф-цию добавив перед ней  после нее скобки() передавая elID
-    //     props.removeTask(elId)
+    // const onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
+    //     setTitle(event.currentTarget.value)
+    //     setError(false) // если начинаем что то путнее печатать после выведения красного текста Title is required, то этот красный текст исчезает
     // }
 
-
-    // const changeFilterTsarHandler = (filterValue: FilterValueTypes, musor?: number) => {
-    // const changeFilterTsarHandler = (filterValue: FilterValueTypes) => {
-    //     {
-    //         props.filterTasks(filterValue)
-    //         setClickedButton(filterValue)
-    //     }     // обьединение трех батонов в одит. Ставим filterValue т.к. нужно несколько аргументов поставить (Алл, Актив, Соиплитед), а похволяетсятся только один
+    // const onKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
+    //     if (event.key === 'Enter') {
+    //         addTask()       // после if идет условие, которое в инпуте реагирует на кнопку Ентер!
+    //     }
     // }
-
-    const onKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
-        if (event.key === 'Enter') {
-            addTaskHandler()       // после if идет условие, которое в инпуте реагирует на кнопку Ентер!
-        }
-    }
 
     const onAllClickHandler = () => {
         props.filterTasks(props.todoListId, 'all')
@@ -119,44 +95,29 @@ export function Todolist(props: PropsType) {
         props.removeTodoList(props.todoListId)
     }
 
+    const addTaskHandler = (valueTitle: string) => {
+        props.addTask(valueTitle, props.todoListId)
+    }
+
     return <div>
         <h3>
             {props.title}
             <button onClick={removeTodoListHandler}>X</button>
         </h3>
-        <div>
-            <input value={title}
-                   onChange={onChangeHandler}
-                   onKeyDown={onKeyDownHandler}
-                   className={error ? styles.error : ''} //вводим красную рамку, если будет невверный текст (пустота)
-            />
+        {/*<div>*/}
+        {/*    <input value={title}*/}
+        {/*           onChange={onChangeHandler}*/}
+        {/*           onKeyDown={onKeyDownHandler}*/}
+        {/*           className={error ? styles.error : ''} //вводим красную рамку, если будет невверный текст (пустота)*/}
+        {/*    />*/}
 
-            {/*onChangeHandler выше не ф-ция, а ссылка на ф-цию. Это как указатель "город Минск"*/}
-            {/*<input onChange={(event) => setTitle(event.currentTarget.value)}/>//вынесли вверх из инпута функцию добавления текста*/}
-            {/*<Button buttonName={'+'} callBack={() => addTaskHandler()}/>*/}
-            <button onClick={() => addTaskHandler()}>+</button>
-            {/*<button onClick={(event) => props.addTask(title)}>+</button>*/}
-            {error && <div className={styles.errorMessage}>Title is required</div>}
-        </div>
+        {/*    <button onClick={() => addTask()}>+</button>*/}
+        {/*    /!*<button onClick={(event) => props.addTask(title)}>+</button>*!/*/}
+        {/*    {error && <div className={styles.errorMessage}>Title is required</div>}*/}
+        {/*</div>*/}
+        <AddItemForm callBack={addTaskHandler} />
         <ul>
             {mappedTasks}
-            {/*{props.tasks.map((el, index) => {*/}
-            {/*    const removeTaskHandler = () => {*/}
-            {/*        props.removeTask(el.id)*/}
-            {/*    }*/}
-            {/*    return (*/}
-            {/*        <li key={el.id}>*/}
-            {/*            <button onClick={()=>removeTaskHandler(el.id)}>X</button>*/}
-            {/*            <input type="checkbox" checked={el.isDone}/>*/}
-            {/*            <span>{el.title}</span>*/}
-            {/*        </li>*/}
-
-            {/*    )*/}
-            {/*})}*/}
-
-            {/*<li><input type="checkbox" checked={props.tasks[0].isDone}/> <span>{props.tasks[0].title}</span></li>*/}
-            {/*<li><input type="checkbox" checked={props.tasks[1].isDone}/> <span>{props.tasks[1].title}</span></li>*/}
-            {/*<li><input type="checkbox" checked={props.tasks[2].isDone}/> <span>{props.tasks[2].title}</span></li>*/}
         </ul>
         <div>
             <button className={clickedButton === 'all' ? styles.activeFilter : ''}
@@ -165,14 +126,7 @@ export function Todolist(props: PropsType) {
                     onClick={onActiveClickHandler}>Active</button>
             <button className={clickedButton === 'completed' ? styles.activeFilter : ''}
                     onClick={onCompletedClickHandler}>Completed</button>
-            {/*<Button buttonName={'All'} callBack={() => changeFilterTsarHandler('all')}/>*/}
-            {/*<Button buttonName={'Active'} callBack={() => changeFilterTsarHandler('active')}/>*/}
-            {/*<Button buttonName={'Completed'} callBack={() => changeFilterTsarHandler('completed')}/>*/}
-            {/*<button onClick={() => changeFilterTsarHandler('all', 100200)}>All</button>  //100200 єто под "musor" */}
-            {/*<button onClick={() => changeFilterTsarHandler('active')}>Active</button>*/}
-            {/*<button onClick={() => changeFilterTsarHandler('completed')}>Completed</button>*/}
-            {/*<button onClick={filterTasksHandlerCompleted}>Completed</button>*/}
-            {/*<button onClick={() => props.filterTasks('Completed')}>Completed</button>         //как пример для всех трех */}
+
         </div>
     </div>
 }
