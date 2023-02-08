@@ -56,6 +56,18 @@ function App() {
     //     {id: v1(), title: "GraphQL", isDone: false},
     // ])
 
+    const updateTask = (todoListId: string, taskID: string, newTitle: string) => { // ввели новый атрибут taskID - єто квартира)). Сама же  ф-ция которая вносит измнения в стейт -когда даблклик делаем на "Milk", вводим текст, а он затем должен сохраниться
+        // console.log(newTitle) //прозвонили, и увидели в консоли изменеяющийся вводимый текст "GraphQLизменение"
+        setTask1({
+            ...tasks1,
+            [todoListId]: tasks1[todoListId].map(el => el.id === taskID ? {...el, title: newTitle} : el)
+        })
+    }
+
+    const updateTodoList = (todoListId: string, newTitle: string) => {
+        setTodoLists(todoLists.map(el => el.id === todoListId ? {...el, title: newTitle} : el))
+    }
+
     const removeTodoList = (todoListId: string) => {
         // console.log(todoListId)
         setTodoLists(todoLists.filter((el) => el.id !== todoListId))
@@ -113,7 +125,7 @@ function App() {
     // console.log(filterKey)
 
     const filterTasks = (todoListId: string, value: FilterValueTypes) => {       //в ф-цию filterTasks приходит значение - название кнопки FilterValueTypes
-                                                                                 // setfilterValueKey(value) // убрали єту ф-цию, т.к. берем фильтр напрямую со второго массива (вместо filterValueKey берем filter)
+        // setfilterValueKey(value) // убрали єту ф-цию, т.к. берем фильтр напрямую со второго массива (вместо filterValueKey берем filter)
         setTodoLists(todoLists.map(el => el.id === todoListId ? {...el, filter: value} : el)) //1.создали новый массив с помощью map (єто тот же массив) 2. вызвали колл бек 3.определили какой элемент массива взять (0 или 1) 4. если нашел нужный элемент, то перезаписываем старый элемент,НО! перезаписываем (меняем) новое значение в старое название filter, т.е. вместо 'all' записали 'value' 5.если не нашли нужный эелемент, перезаписываем его без изменений
     }
 
@@ -148,6 +160,8 @@ function App() {
                         updateIsDone={updateIsDone}
                         filterValueKey={el.filter} // замениили filterValueKey на filter из второго массива
                         removeTodoList={removeTodoList}
+                        updateTask={updateTask}
+                        updateTodoList={updateTodoList}
                     />
                 )
             })}
