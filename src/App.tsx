@@ -34,9 +34,9 @@ function App() {
         [todoListID2]: [
             {id: v1(), title: "Milk", isDone: true},
             {id: v1(), title: "Book", isDone: true},
-            {id: v1(), title: "ReactJS2", isDone: false},
-            {id: v1(), title: "ReactAPI2", isDone: false},
-            {id: v1(), title: "GraphQL2", isDone: false},
+            {id: v1(), title: "Beer", isDone: false},
+            {id: v1(), title: "Gas", isDone: false},
+            {id: v1(), title: "Bike", isDone: false},
         ],
     })
 
