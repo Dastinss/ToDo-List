@@ -3,6 +3,8 @@ import './App.css';
 import {Todolist} from "./Todolist";
 import {v1} from "uuid";
 import {AddItemForm} from "./components/AddItemForm";
+import ButtonAppBar from "./components/ButtonAppBar";
+import {Container, Grid, Paper} from "@material-ui/core";
 
 export type FilterValueTypes = 'all' | 'active' | 'completed'
 
@@ -125,7 +127,7 @@ function App() {
     // console.log(filterKey)
 
     const filterTasks = (todoListId: string, value: FilterValueTypes) => {       //в ф-цию filterTasks приходит значение - название кнопки FilterValueTypes
-        // setfilterValueKey(value) // убрали єту ф-цию, т.к. берем фильтр напрямую со второго массива (вместо filterValueKey берем filter)
+                                                                                 // setfilterValueKey(value) // убрали єту ф-цию, т.к. берем фильтр напрямую со второго массива (вместо filterValueKey берем filter)
         setTodoLists(todoLists.map(el => el.id === todoListId ? {...el, filter: value} : el)) //1.создали новый массив с помощью map (єто тот же массив) 2. вызвали колл бек 3.определили какой элемент массива взять (0 или 1) 4. если нашел нужный элемент, то перезаписываем старый элемент,НО! перезаписываем (меняем) новое значение в старое название filter, т.е. вместо 'all' записали 'value' 5.если не нашли нужный эелемент, перезаписываем его без изменений
     }
 
@@ -134,48 +136,56 @@ function App() {
     //пример как мультиплицировать три раза вызов массива   Todolist : let arrViktory = [0,0]
     // делее строка 75 {arrViktory.map((el) => { ....... и т.д.
 
-    return (
+    return ( //  урок 7 <ButtonAppBar/> и <Container fixed> добавил из material-ui.com. Далее для  упорядочивания <Grid container>
         <div className="App">
-            <AddItemForm callBack={addTodoList}/>
-            {todoLists.map((el) => {
-                // let filteredTasks = tasks1;
-                let filteredTasks = tasks1[el.id];
+            <ButtonAppBar/>
+            <Container fixed>
+                <Grid container style={{padding: '20px'}}>
+                    <AddItemForm callBack={addTodoList}/>
+                </Grid>
+                <Grid container spacing={3}>
+                    {todoLists.map((el) => {
+                        // let filteredTasks = tasks1;
+                        let filteredTasks = tasks1[el.id];
 
-                if (el.filter === 'active') { // если фильтр 'active' то, отрисуй el.isDone. Тут название свойства (фильтр) = названию метода фильтр ниже. Простое совпадение
-                    // filteredTasks = tasks1.filter((el) => el.isDone) // єтот массив закоментили в у.5
-                    filteredTasks = tasks1[el.id].filter((el) => el.isDone)
-                }
-                if (el.filter === 'completed') { // если фильтр 'active' то, отрисуй !el.isDone
-                    filteredTasks = tasks1[el.id].filter((el) => !el.isDone)
-                }
-                return (
-                    <Todolist
-                        key={el.id} //НЕ типизируем! єто номер как в Москвиче, как номер дома для одинаковіх массивов, Ключ для НЕлюдей ))
-                        todoListId={el.id} // в отличие от строки выше типизаруем, это номер для Людей
-                        title={el.title} // вызываем второе св=во каждого элемента массива todoLists, т.е. имя!! это 'What to learn' и 'What to buy'
-                        tasks={filteredTasks}    //поставили переменную(НЕ функцию!!) filteredTasks вместо переменной {tasks1}, т.е. наш друшлак!!!
-                        removeTask={removeTask}
-                        filterTasks={filterTasks}
-                        addTask={addTask}
-                        updateIsDone={updateIsDone}
-                        filterValueKey={el.filter} // замениили filterValueKey на filter из второго массива
-                        removeTodoList={removeTodoList}
-                        updateTask={updateTask}
-                        updateTodoList={updateTodoList}
-                    />
-                )
-            })}
+                        if (el.filter === 'active') { // если фильтр 'active' то, отрисуй el.isDone. Тут название свойства (фильтр) = названию метода фильтр ниже. Простое совпадение
+                            // filteredTasks = tasks1.filter((el) => el.isDone) // єтот массив закоментили в у.5
+                            filteredTasks = tasks1[el.id].filter((el) => el.isDone)
+                        }
+                        if (el.filter === 'completed') { // если фильтр 'active' то, отрисуй !el.isDone
+                            filteredTasks = tasks1[el.id].filter((el) => !el.isDone)
+                        }
+                        return <Grid item>
+                            <Paper style = {{padding: '10px'}}>
+                            <Todolist
+                                key={el.id} //НЕ типизируем! єто номер как в Москвиче, как номер дома для одинаковіх массивов, Ключ для НЕлюдей ))
+                                todoListId={el.id} // в отличие от строки выше типизаруем, это номер для Людей
+                                title={el.title} // вызываем второе св=во каждого элемента массива todoLists, т.е. имя!! это 'What to learn' и 'What to buy'
+                                tasks={filteredTasks}    //поставили переменную(НЕ функцию!!) filteredTasks вместо переменной {tasks1}, т.е. наш друшлак!!!
+                                removeTask={removeTask}
+                                filterTasks={filterTasks}
+                                addTask={addTask}
+                                updateIsDone={updateIsDone}
+                                filterValueKey={el.filter} // замениили filterValueKey на filter из второго массива
+                                removeTodoList={removeTodoList}
+                                updateTask={updateTask}
+                                updateTodoList={updateTodoList}
+                            />
+                            </Paper>
+                        </Grid>
+                    })}
 
-            {/*<Todolist // перенесли эту компоненту выше, чтобы перересовать ее через мап столько раз сколько элементов в массиве todoLists*/}
-            {/*    title="What to learn"*/}
-            {/*    tasks={filteredTasks}    //поставили переменную(НЕ функцию!!) filteredTasks вместо переменной {tasks1}, т.е. наш друшлак!!!*/}
-            {/*    removeTask={removeTask}*/}
-            {/*    filterTasks={filterTasks}*/}
-            {/*    addTask={addTask}*/}
-            {/*    updateIsDone={updateIsDone}*/}
-            {/*    filterValueKey={filterValueKey}*/}
-            {/*/>*/}
-
+                    {/*<Todolist // перенесли эту компоненту выше, чтобы перересовать ее через мап столько раз сколько элементов в массиве todoLists*/}
+                    {/*    title="What to learn"*/}
+                    {/*    tasks={filteredTasks}    //поставили переменную(НЕ функцию!!) filteredTasks вместо переменной {tasks1}, т.е. наш друшлак!!!*/}
+                    {/*    removeTask={removeTask}*/}
+                    {/*    filterTasks={filterTasks}*/}
+                    {/*    addTask={addTask}*/}
+                    {/*    updateIsDone={updateIsDone}*/}
+                    {/*    filterValueKey={filterValueKey}*/}
+                    {/*/>*/}
+                </Grid>
+            </Container>
         </div>
     );
 }

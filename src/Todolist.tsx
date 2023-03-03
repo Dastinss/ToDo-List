@@ -9,6 +9,8 @@ import {EditableSpan} from "./components/EditableSpan";
 // import DeleteIcon from '@material-ui/icons/Delete'; // прописал "через колено" - штатным способом не работало
 import {IconButton} from '@material-ui/core';
 import {Delete} from '@material-ui/icons';
+import Button from '@material-ui/core/Button'; // прописал "через колено" - штатным способом не работало
+import Checkbox from '@material-ui/core/Checkbox';
 
 
 export type TaskType = {
@@ -60,11 +62,20 @@ export function Todolist(props: PropsType) {
 
         return (
             <li key={el.id} className={el.isDone ? styles.isDone : ''}>
+                <Checkbox
+                    onChange={updateIsDoneHandler}
+                    checked={el.isDone}
+                />
+
+                {/*<input type="checkbox" onChange={updateIsDoneHandler} checked={el.isDone}/> // закоментил в уроке 7 когда добавил Checkbox с material-ui.com*/}
                 {/*<CheckBox checked={el.isDone} callBack={(newIsDone) => updateIsDoneHandler(el.id, newIsDone)}/>*/}
-                <input type="checkbox" onChange={updateIsDoneHandler} checked={el.isDone}/>
                 {/*<span>{el.title}</span> // перенесли в новую компоненту EditableSpan*/}
+
                 <EditableSpan OLDtitle = {el.title} callBack = {updateTaskHandler}/>
-                <button onClick={removeTaskHandler}>X</button>
+                <IconButton onClick={removeTaskHandler}>
+                    <Delete />
+                </IconButton>
+                {/*<button onClick={removeTaskHandler}>X</button> // закоментил в уроке 7 когда добавил кнопку с material-ui.com*/}
                 {/*<button onClick={()=>removeTaskHandler(el.id)}>X</button>*/}
                 {/*<Button buttonName={'X'} callBack={removeTaskHandler}/>*/}
             </li>
@@ -124,7 +135,7 @@ export function Todolist(props: PropsType) {
             {/*<Button onClick={removeTodoListHandler} variant="outlined" startIcon={<DeleteIcon /> }> // прописал "через колено" - штатным способом не работало*/}
             {/*    Delete*/}
             {/*</Button>*/}
-            <IconButton onClick={removeTodoListHandler} >
+            <IconButton onClick={removeTodoListHandler}>
                 <Delete />
             </IconButton>
         </h3>
@@ -144,12 +155,27 @@ export function Todolist(props: PropsType) {
             {mappedTasks}
         </ul>
         <div>
-            <button className={clickedButton === 'all' ? styles.activeFilter : ''}
-                    onClick={onAllClickHandler}>All</button>
-            <button className={clickedButton === 'active' ? styles.activeFilter : ''}
-                    onClick={onActiveClickHandler}>Active</button>
-            <button className={clickedButton === 'completed' ? styles.activeFilter : ''}
-                    onClick={onCompletedClickHandler}>Completed</button>
+            <Button
+                onClick={onAllClickHandler}
+                variant={clickedButton === 'all' ? "outlined" : "contained"}
+                color="primary"> All </Button>
+
+            <Button
+                onClick={onActiveClickHandler}
+                variant={clickedButton === 'active' ? "outlined" : "contained"}
+                color="inherit"> Active </Button>
+
+            <Button
+                onClick={onCompletedClickHandler}
+                variant={clickedButton === 'completed' ? "outlined" : "contained"}
+                color="secondary"> Completed </Button>
+
+            {/*<button className={clickedButton === 'all' ? styles.activeFilter : ''} // закоментил в уроке 7 когда добавил кнопку с material-ui.com*!/*/}
+            {/*        onClick={onAllClickHandler}>All</button>*/}
+            {/*<button className={clickedButton === 'active' ? styles.activeFilter : ''} // закоментил в уроке 7 когда добавил кнопку с material-ui.com*!/*/}
+            {/*        onClick={onActiveClickHandler}>Active</button>*/}
+            {/*<button className={clickedButton === 'completed' ? styles.activeFilter : ''} // закоментил в уроке 7 когда добавил кнопку с material-ui.com*!/*/}
+            {/*        onClick={onCompletedClickHandler}>Completed</button>*/}
 
         </div>
     </div>

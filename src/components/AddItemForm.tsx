@@ -1,6 +1,7 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
 import styles from "../Todolist.module.css";
 import Button from '@material-ui/core/Button'; // прописал "через колено" - штатным способом не работало
+import TextField from '@material-ui/core/TextField'; // прописал "через колено" - штатным способом не работало
 
 type PropsType = {
     callBack: (valueTitle: string) => void
@@ -33,26 +34,37 @@ export const AddItemForm = (props: PropsType) => {
 
     const buttonSettings = {
         maxWidth: '30px',
-        maxHeight: '30px',
+        maxHeight: '40px',
         minWidth: '30px',
-        minHeight: '30px',
-        backgroundColor: 'red'
+        minHeight: '40px',
+        backgroundColor: 'blue'
     }
 
     return (
         <div>
-            <input value={title}
-                   onChange={onChangeHandler}
-                   onKeyDown={onKeyDownHandler}
-                   className={error ? styles.error : ''} //вводим красную рамку, если будет невверный текст (пустота)
+            <TextField
+                value={title}
+                onChange={onChangeHandler}
+                onKeyDown={onKeyDownHandler}
+                id="outlined-basic"
+                label={error ? 'Title is required' : 'Welcome'}
+                variant="outlined"
+                size = "small"
+                error = {!!error} // єто значит true, т.е. преобразовали string b
             />
+
+            {/*<input value={title} // // закоментил в уроке 7 когда добавил TextField с material-ui.com*/}
+            {/*       onChange={onChangeHandler}*/}
+            {/*       onKeyDown={onKeyDownHandler}*/}
+            {/*       className={error ? styles.error : ''} //вводим красную рамку, если будет невверный текст (пустота) *!/*/}
+            {/*/>*/}
             {/*<button onClick={() => addTask()}>+</button> // закоментил в уроке 7 когда добавил кнопку с material-ui.com*/}
             <Button
                 variant="contained"
                 style={buttonSettings}
                 onClick={() => addTask()}>+</Button>
-            {/*<button onClick={(event) => props.addTask(title)}>+</button>*/}
-            {/*{error && <div className={styles.errorMessage}>Title is required</div>}*/}
+            {/*<button onClick={(event) => props.addTask(title)}>+</button> // закоментил в уроке 7 когда добавил TextField с material-ui.com*/}
+            {/*{error && <div className={styles.errorMessage}>Title is required</div>} // закоментил в уроке 7 когда добавил TextField с material-ui.com*/}
         </div>
     );
 };
