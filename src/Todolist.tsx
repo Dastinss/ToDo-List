@@ -5,6 +5,11 @@ import styles from "./Todolist.module.css"
 import {AddItemForm} from "./components/AddItemForm";
 import {EditableSpan} from "./components/EditableSpan";
 //import {CheckBox} from "./components/CheckBox";
+// import Button from '@material-ui/core/Button'; // прописал "через колено" - штатным способом не работало
+// import DeleteIcon from '@material-ui/icons/Delete'; // прописал "через колено" - штатным способом не работало
+import {IconButton} from '@material-ui/core';
+import {Delete} from '@material-ui/icons';
+
 
 export type TaskType = {
     id: string
@@ -115,7 +120,13 @@ export function Todolist(props: PropsType) {
         <h3>
             {/*{props.title}*/}
             <EditableSpan OLDtitle={props.title} callBack={updateTodoListHandler}/>
-            <button onClick={removeTodoListHandler}>X</button>
+            {/*<button onClick={removeTodoListHandler}>X</button> // закоментил в уроке 7 когда добавил кнопку с material-ui.com*/}
+            {/*<Button onClick={removeTodoListHandler} variant="outlined" startIcon={<DeleteIcon /> }> // прописал "через колено" - штатным способом не работало*/}
+            {/*    Delete*/}
+            {/*</Button>*/}
+            <IconButton onClick={removeTodoListHandler} >
+                <Delete />
+            </IconButton>
         </h3>
         {/*<div>*/}
         {/*    <input value={title}*/}
@@ -143,3 +154,5 @@ export function Todolist(props: PropsType) {
         </div>
     </div>
 }
+
+// закоментил в уроке 7 когда добавил кнопку с material-ui.com

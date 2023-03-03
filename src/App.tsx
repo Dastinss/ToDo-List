@@ -25,7 +25,7 @@ function App() {
 
     let [tasks1, setTask1] = useState({    //добавили новый массив (урок 5). Старую "КАСТРЮЛЮ" закоментили
         [todoListID1]: [
-            {id: v1(), title: "HTML&CSS", isDone: true},
+            {id: v1(), title: "HTML&CSSs", isDone: true},
             {id: v1(), title: "JS", isDone: true},
             {id: v1(), title: "ReactJS", isDone: false},
             {id: v1(), title: "ReactAPI", isDone: false},

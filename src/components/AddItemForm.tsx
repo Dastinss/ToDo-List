@@ -1,5 +1,6 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
 import styles from "../Todolist.module.css";
+import Button from '@material-ui/core/Button'; // прописал "через колено" - штатным способом не работало
 
 type PropsType = {
     callBack: (valueTitle: string) => void
@@ -30,6 +31,14 @@ export const AddItemForm = (props: PropsType) => {
         }
     }
 
+    const buttonSettings = {
+        maxWidth: '30px',
+        maxHeight: '30px',
+        minWidth: '30px',
+        minHeight: '30px',
+        backgroundColor: 'red'
+    }
+
     return (
         <div>
             <input value={title}
@@ -37,9 +46,15 @@ export const AddItemForm = (props: PropsType) => {
                    onKeyDown={onKeyDownHandler}
                    className={error ? styles.error : ''} //вводим красную рамку, если будет невверный текст (пустота)
             />
-            <button onClick={() => addTask()}>+</button>
+            {/*<button onClick={() => addTask()}>+</button> // закоментил в уроке 7 когда добавил кнопку с material-ui.com*/}
+            <Button
+                variant="contained"
+                style={buttonSettings}
+                onClick={() => addTask()}>+</Button>
             {/*<button onClick={(event) => props.addTask(title)}>+</button>*/}
             {/*{error && <div className={styles.errorMessage}>Title is required</div>}*/}
         </div>
     );
 };
+
+//
