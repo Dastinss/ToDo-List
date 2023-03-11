@@ -12,7 +12,7 @@ export type FilterValueTypes = 'all' | 'active' | 'completed'
 //     [key: string] : TaskType1[]
 // }
 
-type TodoListType = { id: string, title: string, filter: FilterValueTypes } // добавили новый массив в уроке 5
+export type TodoListType = { id: string, title: string, filter: FilterValueTypes } // добавили новый массив в уроке 5
 
 function App() {
 
