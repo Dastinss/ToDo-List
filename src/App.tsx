@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import './App.css';
-import {Todolist} from "./Todolist";
+import {TaskType, Todolist} from "./Todolist";
 import {v1} from "uuid";
 import {AddItemForm} from "./components/AddItemForm";
 import ButtonAppBar from "./components/ButtonAppBar";
@@ -8,11 +8,15 @@ import {Container, Grid, Paper} from "@material-ui/core";
 
 export type FilterValueTypes = 'all' | 'active' | 'completed'
 
+export type TodoListType = { id: string, title: string, filter: FilterValueTypes } // добавили новый массив в уроке 5
+
+export type TasksStateType = { // добавил в уроке 9 т.к. в шаблоне урока это было, а у меня нет ...
+    [key: string]: Array<TaskType>
+}
+
 // type TaskType1 = { // типизация ключа
 //     [key: string] : TaskType1[]
 // }
-
-export type TodoListType = { id: string, title: string, filter: FilterValueTypes } // добавили новый массив в уроке 5
 
 function App() {
 
@@ -25,7 +29,7 @@ function App() {
         {id: todoListID2, title: 'What to buy', filter: 'all'},
     ])
 
-    let [tasks1, setTask1] = useState({    //добавили новый массив (урок 5). Старую "КАСТРЮЛЮ" закоментили
+    let [tasks1, setTask1] = useState<TasksStateType>({    //добавили новый массив (урок 5). Старую "КАСТРЮЛЮ" закоментили
         [todoListID1]: [
             {id: v1(), title: "HTML&CSSs", isDone: true},
             {id: v1(), title: "JS", isDone: true},
