@@ -10,8 +10,9 @@ export const TodolistsReducer = (state: TodoListType[], action: tsarType): TodoL
         }
 
         case 'ADD-TODOLIST' : {
-            let newID = v1();
-            let newTodo: TodoListType = {id: newID, title: action.payload.newTodolistTitle, filter: 'all'}; // для пустого ТудуЛиста
+            // let newID = v1(); // закоментил в 9 уроке, когда добавили один ИД для одного актион для двух редьюсеров
+            // let newTodo: TodoListType = {id: newID, title: action.payload.newTodolistTitle, filter: 'all'}; // закоментил в 9 уроке, когда добавили один ИД для одного актион для двух редьюсеров
+            let newTodo: TodoListType = {id: action.payload.todoListId, title: action.payload.newTodolistTitle, filter: 'all'}; // добавил в 9 уроке
             return [...state, newTodo]
         }
 
@@ -37,12 +38,13 @@ export const removeTodoListAC = (todolistId1: string) => { //это наш со�
     } as const
 }
 
-type addTodoListACType = ReturnType<typeof addTodoListAC>
+export type addTodoListACType = ReturnType<typeof addTodoListAC>
 export const addTodoListAC = (newTodolistTitle: string) => {
     return {
         type: 'ADD-TODOLIST',
         payload: {
-            newTodolistTitle
+            newTodolistTitle,
+            todoListId: v1() // добавил в 9 уроке, когда создали новый ТАскРедьюсер и поняли, что в двух редьюсерах исп-ся один и тот же action. Чтобы соотнести новый массив ТудуЛист с новымими тасками, которые в нем появяться добавили один и тот же ИД для них
         }
     } as const
 }
