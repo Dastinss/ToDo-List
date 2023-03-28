@@ -3,7 +3,7 @@
 import {FilterValueTypes, TodoListType} from "../App";
 import {v1} from "uuid";
 
-export const TodolistsReducer = (state: TodoListType[], action: tsarType): TodoListType[] => {
+export const TodolistsReducer = (state: TodoListType[], action: tsarType): TodoListType[] => { // чистая ф-ция, т.е. входяшие данные не меняет, поэтому в каждый
     switch (action.type) {
         case 'REMOVE-TODOLIST' : {
             return state.filter(el => el.id !== action.payload.todolistId1)
