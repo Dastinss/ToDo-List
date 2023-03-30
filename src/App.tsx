@@ -81,7 +81,7 @@ function App() {
         console.log(tasks1)
     }
 
-    const updateIsDone = (todoListId: string, taskId: string, newIsDone: boolean) => { // у.5 : добавили глобальную Id (номер подьезда перед номером квартиры)  и перенесли его в тапизацию в Тудулист
+    const updateIsDone = (taskId: string, newIsDone: boolean, todoListId: string) => { // у.5 : добавили глобальную Id (номер подьезда перед номером квартиры)  и перенесли его в тапизацию в Тудулист
         // чтобы привызяать к конкретной строке из п.17 указваем id & isDone. Цель - вяжем єту функцию у тегу updateIsDoneHandler из TodoList
         // setTask1 (tasks1.map(el=> el.id === taskId ? {...el, isDone: newIsDone}  : el ))
         //console.log(taskId, newIsDone) было перед тем, как прописали строку выше, которая начала ставит галочки сразу в браузере

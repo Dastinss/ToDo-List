@@ -21,7 +21,9 @@ type ActionType = RemoveTaskActionType
     | addTodoListACType //єкспортировали тип с файла todolists-reducer
     | RemoveTodolistActionType
 
-export const tasksReducer = (state: TasksStateType, action: ActionType) => {
+const initialState: TasksStateType = {};
+
+export const tasksReducer = (state = initialState, action: ActionType) => { // для параметра state мы задаем значение по дефолту, равное начальному состоянию. У нас это будет пустой обьект
     switch (action.type) {
         case 'REMOVE-TASK' :
             return {
@@ -59,15 +61,16 @@ export const tasksReducer = (state: TasksStateType, action: ActionType) => {
             }
 
         case 'REMOVE-TODOLIST' :
-            // const copyState = {...state} 
-            // delete copyState[action.todoListId] // удаление чеоез delete
-            // return copyState
+            const copyState = {...state}
+            delete copyState[action.todoListId] // удаление чеоез delete
+            return copyState
 
-            const {[action.todoListId]: [], ...rest} = {...state} // удаление чеоез деструктуризацию: выделили нужное нам свойство которое грохаем и выделяем вторую часть нашего объекта, куда будут входить оставшиеся св-ва нашего обьекта
-            return rest
+            // const {[action.todoListId]: [], ...rest} = {...state} // удаление чеоез деструктуризацию: выделили нужное нам свойство которое грохаем и выделяем вторую часть нашего объекта, куда будут входить оставшиеся св-ва нашего обьекта
+            // return rest
 
         default:
-            throw new Error('I dont understand this type')
+            // throw new Error('I dont understand this type') // урок 10 закоментили, изменили на стейт,
+            return state; //если switch не нашёл совпадения, то он должен вернуть state без изменения
     }
 }
 
@@ -79,12 +82,12 @@ export const addTaskAC = (title: string, todoListId: string) => {
     return {type: 'ADD-TASK', title, todoListId} as const
 }
 
-export const changeTaskStatusAC = (taskId: string, todoListId: string, isDone: boolean) => {
-    return {type: 'CHANGE-STATUS-TASK', taskId, isDone, todoListId} as const
+export const changeTaskStatusAC = (taskId: string, isDone: boolean, todoListId: string) => {
+    return {type: 'CHANGE-STATUS-TASK', taskId, isDone, todoListId } as const
 }
 
 export const changeTaskTitleAC = (taskId: string, title: string, todoListId: string) => {
-    return {type: 'CHANGE-TITLE-TASK', taskId, title, todoListId} as const
+    return {type: 'CHANGE-TITLE-TASK', title, todoListId, taskId} as const
 }
 
 export const RemoveTodolistAC = (todoListId: string) => {

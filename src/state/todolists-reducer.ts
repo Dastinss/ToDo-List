@@ -3,7 +3,9 @@
 import {FilterValueTypes, TodoListType} from "../App";
 import {v1} from "uuid";
 
-export const TodolistsReducer = (state: TodoListType[], action: tsarType): TodoListType[] => { // чистая ф-ция, т.е. входяшие данные не меняет, поэтому в каждый
+const initialState: TodoListType[] = []; // для параметра state мы задаем значение по дефолту, равное начальному состоянию. У нас это будет пустой массив
+
+export const TodolistsReducer = (state = initialState, action: tsarType): TodoListType[] => { // чистая ф-ция, т.е. входяшие данные не меняет, поэтому в каждый
     switch (action.type) {
         case 'REMOVE-TODOLIST' : {
             return state.filter(el => el.id !== action.payload.todolistId1)
@@ -23,6 +25,9 @@ export const TodolistsReducer = (state: TodoListType[], action: tsarType): TodoL
         case 'CHANGE-TODOLIST-FILTER' : {
             return state.map(el => el.id === action.payload.todolistId2 ? {...el, filter: action.payload.newFilter} : el)
         }
+
+        default:
+            return state //если switch не нашёл совпадения, то он должен вернуть state без изменения
     }
 }
 

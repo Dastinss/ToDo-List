@@ -13,6 +13,8 @@ import {
     updateTodoListAC
 } from "./state/todolists-reducer";
 import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC, tasksReducer} from "./state/tasks-reducer";
+import {useDispatch, useSelector} from "react-redux";
+import {AppRootStateType} from "./state/store";
 
 export type FilterValueTypes = 'all' | 'active' | 'completed'
 
@@ -22,69 +24,72 @@ export type TasksStateType = {
     [key: string]: Array<TaskType>
 }
 
-function AppWithReducers() {
+function AppWithRedux() {
 
     let todoListID1 = v1();
     let todoListID2 = v1();
 
-    let [todoLists, dispatchTodoLists] = useReducer(TodolistsReducer,
-        [
-        {id: todoListID1, title: 'What to learn', filter: 'all'},
-        {id: todoListID2, title: 'What to buy', filter: 'all'},
-    ])
+    let todoLists = useSelector<AppRootStateType, TodoListType[]>( state=> state.todolists ) // первый аргумент в дженерике -AppRootStateType - тип с которым мы работаем (берем из стейта), второй - то что мы хотим из нешего селектора возвратить TodoListType[] (массив туду листов берем из редьюсера). А в параметрах колл бека сидит наш стейт
+    let tasks1 = useSelector<AppRootStateType, TasksStateType>( state => state.tasks ) // первый аргумент в дженерике -AppRootStateType - тип с которым мы работаем (берем из стейта), второй - то что мы хотим из нешего селектора возвратить TasksStateType (обект таск из редьюсера). А в параметрах колл бека сидит наш стейт
 
-    let [tasks1, dispatchTask1] = useReducer(tasksReducer, {
-        [todoListID1]: [
-            {id: v1(), title: "HTML&CSSs", isDone: true},
-            {id: v1(), title: "JS", isDone: true},
-            {id: v1(), title: "ReactJS", isDone: false},
-            {id: v1(), title: "ReactAPI", isDone: false},
-            {id: v1(), title: "GraphQL", isDone: false},
-        ],
-        [todoListID2]: [
-            {id: v1(), title: "Milk", isDone: true},
-            {id: v1(), title: "Book", isDone: true},
-            {id: v1(), title: "Beer", isDone: false},
-            {id: v1(), title: "Gas", isDone: false},
-            {id: v1(), title: "Bike", isDone: false},
-        ],
-    })
+    // let [todoLists, dispatchTodoLists] = useReducer(TodolistsReducer, //осталось с Арр при копировании компоненты, тут оставил, чтобы видеть разницу в подъодах
+    //     [
+    //         {id: todoListID1, title: 'What to know', filter: 'all'},
+    //         {id: todoListID2, title: 'What to buy', filter: 'all'},
+    // ])
+    //
+    // let [tasks1, dispatchTask1] = useReducer(tasksReducer, {
+    //     [todoListID1]: [
+    //         {id: v1(), title: "HTML&CSSs", isDone: true},
+    //         {id: v1(), title: "JS", isDone: true},
+    //         {id: v1(), title: "ReactJS", isDone: false},
+    //         {id: v1(), title: "ReactAPI", isDone: false},
+    //         {id: v1(), title: "GraphQL", isDone: false},
+    //     ],
+    //     [todoListID2]: [
+    //         {id: v1(), title: "Milk", isDone: true},
+    //         {id: v1(), title: "Book", isDone: true},
+    //         {id: v1(), title: "Beer", isDone: false},
+    //         {id: v1(), title: "Gas", isDone: false},
+    //         {id: v1(), title: "Sweets", isDone: false},
+    //     ],
+    // })
+
+    const dispatch = useDispatch(); // метод стора диспатч, вызов которого спровоцирует\оживит работу нашего флакс круговорота, соотве-но изменение нашего стейта и нашего UI
 
     const removeTask = (todoListId: string, taskId: string) => {
         // let action = removeTaskAC(taskId, todoListId)
         // dispatchTask1(action)
-        dispatchTask1(removeTaskAC(taskId, todoListId))
+        dispatch(removeTaskAC(taskId, todoListId))
     }
 
     const addTask = (valueTitle: string, todoListId: string) => {
-        dispatchTask1(addTaskAC(valueTitle, todoListId))
+        dispatch(addTaskAC(valueTitle, todoListId))
     }
 
-    const updateIsDone = (taskId: string, newIsDone: boolean, todoListId: string) => {
-        dispatchTask1(changeTaskStatusAC(taskId, newIsDone, todoListId))
+    const updateIsDone = (taskId: string, newIsDone: boolean, todoListId: string, ) => {
+        dispatch(changeTaskStatusAC(taskId, newIsDone, todoListId))
     };
 
-    const updateTask = (taskID: string, newTitle: string, todoListId: string, ) => {
-        dispatchTask1(changeTaskTitleAC(taskID, newTitle, todoListId))
+    const updateTask = (taskID: string, newTitle: string, todoListId: string) => {
+        dispatch(changeTaskTitleAC(taskID, newTitle, todoListId))
     }
 
     const removeTodoList = (todoListId: string) => {
-        dispatchTodoLists(removeTodoListAC(todoListId))
-        // dispatchTask1(removeTodoListAC(todoListId)) // в уроке 10 1:54 есть такое, но у меня система ругается ((
+        dispatch(removeTodoListAC(todoListId))
     }
 
     const addTodoList = (newTitle: string) => {
         let action = addTodoListAC(newTitle)
-        dispatchTodoLists(action)
-        dispatchTask1(action)
+        dispatch(action)
     }
 
     const updateTodoList = (todoListId: string, newTitle: string) => {
-        dispatchTodoLists(updateTodoListAC(todoListId, newTitle))
+        dispatch(updateTodoListAC(todoListId, newTitle))
     }
 
     const filterTasks = (todoListId: string, value: FilterValueTypes) => {
-        dispatchTodoLists(filterTasksAC(todoListId, value))
+        dispatch(filterTasksAC(todoListId, value))
     }
 
     return (
@@ -131,4 +136,4 @@ function AppWithReducers() {
     );
 }
 
-export default AppWithReducers;
+export default AppWithRedux;

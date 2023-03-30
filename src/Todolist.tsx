@@ -26,7 +26,7 @@ type PropsType = {
     removeTask: (todoListId: string, taskID: string) => void
     filterTasks: (todoListId: string, value: FilterValueTypes) => void
     addTask: (valueTitle: string, todoListId: string) => void
-    updateIsDone: (todoListId: string, taskId: string, newIsDone: boolean) => void
+    updateIsDone: (taskId: string, newIsDone: boolean, todoListId: string, ) => void
     filterValueKey: FilterValueTypes
     removeTodoList: (todoListId: string)=> void
     updateTask : (todoListId: string, taskID: string, newTitle: string) => void
@@ -49,7 +49,7 @@ export function Todolist(props: PropsType) {
 
         //удали стр 34-36 при выносе чек бокс в отдельную компоненту, переписали по новой строчкой ниже
         const updateIsDoneHandler = (event: ChangeEvent<HTMLInputElement>) => {     // убираем ошибки красные в конс лог в хром, т.к. isDone жестко прошито (стоит или true или false). переносим в App как updateIsDone
-            props.updateIsDone(props.todoListId, el.id, event.currentTarget.checked)
+            props.updateIsDone(el.id, event.currentTarget.checked, props.todoListId)
         }
         //
         // const updateIsDoneHandler = (newIsDone: boolean) => { //скопировали типизацию из PropsType CheckBox
