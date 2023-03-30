@@ -26,10 +26,10 @@ type PropsType = {
     removeTask: (todoListId: string, taskID: string) => void
     filterTasks: (todoListId: string, value: FilterValueTypes) => void
     addTask: (valueTitle: string, todoListId: string) => void
-    updateIsDone: (taskId: string, newIsDone: boolean, todoListId: string, ) => void
+    updateIsDone: (taskId: string, newIsDone: boolean, todoListId: string,) => void
     filterValueKey: FilterValueTypes
-    removeTodoList: (todoListId: string)=> void
-    updateTask : (todoListId: string, taskID: string, newTitle: string) => void
+    removeTodoList: (todoListId: string) => void
+    updateTask: (todoListId: string, taskID: string, newTitle: string) => void
     updateTodoList: (todoListId: string, newTitle: string) => void
 }
 
@@ -57,7 +57,7 @@ export function Todolist(props: PropsType) {
         // }
 
         const updateTaskHandler = (newTitle: string) => {
-            props.updateTask (props.todoListId, el.id, newTitle)
+            props.updateTask(props.todoListId, el.id, newTitle)
         }
 
         return (
@@ -71,9 +71,9 @@ export function Todolist(props: PropsType) {
                 {/*<CheckBox checked={el.isDone} callBack={(newIsDone) => updateIsDoneHandler(el.id, newIsDone)}/>*/}
                 {/*<span>{el.title}</span> // перенесли в новую компоненту EditableSpan*/}
 
-                <EditableSpan OLDtitle = {el.title} callBack = {updateTaskHandler}/>
+                <EditableSpan OLDtitle={el.title} callBack={updateTaskHandler}/>
                 <IconButton onClick={removeTaskHandler}>
-                    <Delete />
+                    <Delete/>
                 </IconButton>
                 {/*<button onClick={removeTaskHandler}>X</button> // закоментил в уроке 7 когда добавил кнопку с material-ui.com*/}
                 {/*<button onClick={()=>removeTaskHandler(el.id)}>X</button>*/}
@@ -107,11 +107,11 @@ export function Todolist(props: PropsType) {
         setClickedButton('all')
     }
     const onActiveClickHandler = () => {
-        props.filterTasks(props.todoListId,'active')
+        props.filterTasks(props.todoListId, 'active')
         setClickedButton('active')
     }
     const onCompletedClickHandler = () => {
-        props.filterTasks(props.todoListId,'completed')
+        props.filterTasks(props.todoListId, 'completed')
         setClickedButton('completed')
     }
 
@@ -136,7 +136,7 @@ export function Todolist(props: PropsType) {
             {/*    Delete*/}
             {/*</Button>*/}
             <IconButton onClick={removeTodoListHandler}>
-                <Delete />
+                <Delete/>
             </IconButton>
         </h3>
         {/*<div>*/}
@@ -150,7 +150,7 @@ export function Todolist(props: PropsType) {
         {/*    /!*<button onClick={(event) => props.addTask(title)}>+</button>*!/*/}
         {/*    {error && <div className={styles.errorMessage}>Title is required</div>}*/}
         {/*</div>*/}
-        <AddItemForm callBack={addTaskHandler} />
+        <AddItemForm callBack={addTaskHandler}/>
         <ul>
             {mappedTasks}
         </ul>

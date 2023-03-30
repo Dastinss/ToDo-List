@@ -23,7 +23,7 @@ type ActionType = RemoveTaskActionType
 
 const initialState: TasksStateType = {};
 
-export const tasksReducer = (state = initialState, action: ActionType) => { // для параметра state мы задаем значение по дефолту, равное начальному состоянию. У нас это будет пустой обьект
+export const tasksReducer = (state = initialState, action: ActionType): TasksStateType => { // для параметра state мы задаем значение по дефолту, равное начальному состоянию. У нас это будет пустой обьект
     switch (action.type) {
         case 'REMOVE-TASK' :
             return {
@@ -36,37 +36,63 @@ export const tasksReducer = (state = initialState, action: ActionType) => { // �
                 ...state, [action.todoListId]: [newTask, ...state[action.todoListId]]
             }
 
-        case 'CHANGE-STATUS-TASK' :
-            return {
-                ...state,
-                [action.todoListId]: state[action.todoListId].map(task => task.id ? {
-                    ...task,
-                    isDone: action.isDone
-                } : task)
-            }
+        case 'CHANGE-STATUS-TASK' : {
+            // return {  ///// ЄТОТ ВАРИАНТ НАПИСАЛИ НА ЛЕКЦИИ НЕ ИДЕТ!!! ставится одновременно галочка на всех тасках ((((
+            //     ...state,
+            //     [action.todoListId]: state[action.todoListId].map(task => task.id ? {
+            //         ...task,
+            //         isDone: action.isDone
+            //     } : task)
+            // }
 
-        case 'CHANGE-TITLE-TASK' :
-            return {
-                ...state,
-                [action.todoListId]: state[action.todoListId].map(task => task.id ? {
-                    ...task,
-                    title: action.title
-                } : task)
+            let todolistTasks = state[action.todoListId]; /// ЄТОТ вариант взял с download
+            // найдём нужную таску:
+            let task = todolistTasks.find(task => task.id === action.taskId);
+            //изменим таску, если она нашлась
+            if (task) {
+                task.isDone = action.isDone;
             }
+            return ({...state});
+        }
 
-        case 'ADD-TODOLIST' :
+
+        case
+        'CHANGE-TITLE-TASK' : {
+            // return { ЄТОТ ВАРИАНТ НАПИСАЛИ НА ЛЕКЦИИ НЕ ИДЕТ!!! ставится одновременно галочка на всех тасках ((((
+            //     ...state,
+            //     [action.todoListId]: state[action.todoListId].map(task => task.id ? {
+            //         ...task,
+            //         title: action.title
+            //     } : task)
+            // }
+
+            let todolistTasks = state[action.todoListId];
+            // найдём нужную таску:
+            let task = todolistTasks.find(task => task.id === action.taskId);
+            //изменим таску, если она нашлась
+            if (task) {
+                task.title = action.title;
+            }
+            return ({...state});
+        }
+
+        case
+        'ADD-TODOLIST'
+        :
             return {
                 ...state,
                 [action.payload.todoListId]: []
             }
 
-        case 'REMOVE-TODOLIST' :
+        case
+        'REMOVE-TODOLIST'
+        :
             const copyState = {...state}
             delete copyState[action.todoListId] // удаление чеоез delete
             return copyState
 
-            // const {[action.todoListId]: [], ...rest} = {...state} // удаление чеоез деструктуризацию: выделили нужное нам свойство которое грохаем и выделяем вторую часть нашего объекта, куда будут входить оставшиеся св-ва нашего обьекта
-            // return rest
+        // const {[action.todoListId]: [], ...rest} = {...state} // удаление чеоез деструктуризацию: выделили нужное нам свойство которое грохаем и выделяем вторую часть нашего объекта, куда будут входить оставшиеся св-ва нашего обьекта
+        // return rest
 
         default:
             // throw new Error('I dont understand this type') // урок 10 закоментили, изменили на стейт,
@@ -83,11 +109,11 @@ export const addTaskAC = (title: string, todoListId: string) => {
 }
 
 export const changeTaskStatusAC = (taskId: string, isDone: boolean, todoListId: string) => {
-    return {type: 'CHANGE-STATUS-TASK', taskId, isDone, todoListId } as const
+    return {type: 'CHANGE-STATUS-TASK', taskId, isDone, todoListId} as const
 }
 
-export const changeTaskTitleAC = (taskId: string, title: string, todoListId: string) => {
-    return {type: 'CHANGE-TITLE-TASK', title, todoListId, taskId} as const
+export const changeTaskTitleAC = (todoListId: string, taskId: string, title: string) => {
+    return {type: 'CHANGE-TITLE-TASK', todoListId, taskId, title} as const
 }
 
 export const RemoveTodolistAC = (todoListId: string) => {
