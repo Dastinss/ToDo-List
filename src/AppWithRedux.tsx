@@ -1,4 +1,4 @@
-import React, {useReducer, useState} from 'react';
+import React, {useCallback, useReducer, useState} from 'react';
 import './App.css';
 import {TaskType, Todolist} from "./Todolist";
 import {v1} from "uuid";
@@ -57,40 +57,41 @@ function AppWithRedux() {
 
     const dispatch = useDispatch(); // метод стора диспатч, вызов которого спровоцирует\оживит работу нашего флакс круговорота, соотве-но изменение нашего стейта и нашего UI
 
-    const removeTask = (todoListId: string, taskId: string) => {
+    const removeTask = useCallback((todoListId: string, taskId: string) => {
         // let action = removeTaskAC(taskId, todoListId)
         // dispatchTask1(action)
         dispatch(removeTaskAC(taskId, todoListId))
-    }
+    }, [dispatch])
 
-    const addTask = (valueTitle: string, todoListId: string) => {
+    const addTask = useCallback((valueTitle: string, todoListId: string) => { // обернули (и еще 2 ф-ции "по цепочке") в уроке 11 эту ф-цию в useCallback. Эта ф-ция идет "по цепочке", т.к. выступвет родительской копонентой по отношению к дочерней в ТудуЛист addTaskHandler и передает туда пропсы
         dispatch(addTaskAC(valueTitle, todoListId))
-    }
+    },[dispatch])
 
-    const updateIsDone = (taskId: string, newIsDone: boolean, todoListId: string, ) => {
+    const updateIsDone = useCallback((taskId: string, newIsDone: boolean, todoListId: string, ) => {
         dispatch(changeTaskStatusAC(taskId, newIsDone, todoListId))
-    };
+    }, [dispatch])
 
-    const updateTask = (todoListId: string, taskID: string, newTitle: string) => {
+    const updateTask = useCallback((todoListId: string, taskID: string, newTitle: string) => {
         dispatch(changeTaskTitleAC(todoListId, taskID, newTitle))
-    }
+    }, [dispatch])
 
-    const removeTodoList = (todoListId: string) => {
+    const removeTodoList = useCallback((todoListId: string) => {
         dispatch(removeTodoListAC(todoListId))
-    }
+    }, [dispatch])
 
-    const addTodoList = (newTitle: string) => {
+    //отвечает за добавление ТудуЛиста. Когда вызывается этот колл бек, т.е. при добавлении ТудуЛиста, создается новая ф-ция, и пропсы, соот-но, другие. Вызывается диспатч, изменились Тудулисты, и AppWithRedux ререндерится\вызывается
+    const addTodoList = useCallback((newTitle: string) => { // обернули (и еще 2 ф-ции "по цепочке") в уроке 11 эту ф-цию в useCallback, которая приходит в пропсы ф-ции AddItemForm
         let action = addTodoListAC(newTitle)
         dispatch(action)
-    }
+    },[dispatch])
 
-    const updateTodoList = (todoListId: string, newTitle: string) => {
+    const updateTodoList = useCallback((todoListId: string, newTitle: string) => {
         dispatch(updateTodoListAC(todoListId, newTitle))
-    }
+    }, [dispatch])
 
-    const filterTasks = (todoListId: string, value: FilterValueTypes) => {
+    const filterTasks = useCallback((todoListId: string, value: FilterValueTypes) => {
         dispatch(filterTasksAC(todoListId, value))
-    }
+    }, [dispatch])
 
     return (
         <div className="App">
@@ -101,22 +102,23 @@ function AppWithRedux() {
                 </Grid>
                 <Grid container spacing={3}>
                     {todoLists.map((el) => {
-                        // let filteredTasks = tasks1;
-                        let filteredTasks = tasks1[el.id];
-
-                        if (el.filter === 'active') { // если фильтр 'active' то, отрисуй el.isDone. Тут название свойства (фильтр) = названию метода фильтр ниже. Простое совпадение
-                            filteredTasks = tasks1[el.id].filter((el) => el.isDone)
-                        }
-                        if (el.filter === 'completed') { // если фильтр 'active' то, отрисуй !el.isDone
-                            filteredTasks = tasks1[el.id].filter((el) => !el.isDone)
-                        }
+                        // // let filteredTasks = tasks1;
+                        // let filteredTasks = tasks1[el.id]; // перенесли в уроке 11 в ТудуЛист
+                        //
+                        // if (el.filter === 'active') { // если фильтр 'active' то, отрисуй el.isDone. Тут название свойства (фильтр) = названию метода фильтр ниже. Простое совпадение
+                        //     filteredTasks = tasks1[el.id].filter((el) => el.isDone)
+                        // }
+                        // if (el.filter === 'completed') { // если фильтр 'active' то, отрисуй !el.isDone
+                        //     filteredTasks = tasks1[el.id].filter((el) => !el.isDone)
+                        // }
                         return <Grid item>
                             <Paper style = {{padding: '10px'}}>
                             <Todolist
                                 key={el.id} //НЕ типизируем! єто номер как в Москвиче, как номер дома для одинаковіх массивов, Ключ для НЕлюдей ))
                                 todoListId={el.id} // в отличие от строки выше типизаруем, это номер для Людей
                                 title={el.title} // вызываем второе св=во каждого элемента массива todoLists, т.е. имя!! это 'What to learn' и 'What to buy'
-                                tasks={filteredTasks}    //поставили переменную(НЕ функцию!!) filteredTasks вместо переменной {tasks1}, т.е. наш друшлак!!!
+                                // tasks={filteredTasks}    //поставили переменную(НЕ функцию!!) filteredTasks вместо переменной {tasks1}, т.е. наш друшлак!!!
+                                tasks={tasks1[el.id]}    // урок 11 вместо значения строкой выше после переноса в тудулист  filteredTasks. Отдаем все такси конкретного ТудуЛиста, а фмльтровать их будем уже в ТудуЛист
                                 removeTask={removeTask}
                                 filterTasks={filterTasks}
                                 addTask={addTask}

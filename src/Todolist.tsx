@@ -1,4 +1,4 @@
-import React, {ChangeEvent, KeyboardEvent, useState} from "react";
+import React, {ChangeEvent, KeyboardEvent, useCallback, useState} from "react";
 import {FilterValueTypes} from "./App";
 //import {Button} from "./components/Button";
 import styles from "./Todolist.module.css"
@@ -33,7 +33,8 @@ type PropsType = {
     updateTodoList: (todoListId: string, newTitle: string) => void
 }
 
-export function Todolist(props: PropsType) {
+export const Todolist = React.memo((props: PropsType) => { // обернули в React.memo в уроке 11, мемо работает в связке с useCallback если есть колл беки. В данном случае колл беки есть (callBack: (valueTitle: string) => void)
+    console.log('Todolist')
     // let [title, setTitle] = useState(' ')   // создаем хук которій нам выводит из инпут введенный текст в строку ниже
     // const [error, setError] = useState(false)
     const [clickedButton, setClickedButton] = useState('all')
@@ -41,46 +42,6 @@ export function Todolist(props: PropsType) {
     // const updateIsDoneHandler = (elId: string, newIsDone: boolean) => { //скопировали типизацию из PropsType CheckBox
     //     props.updateIsDone(elId, newIsDone)
     // }
-
-    const mappedTasks = props.tasks.map((el, index) => {    //вінесли "по-челоловечески" ))) map
-        const removeTaskHandler = () => {
-            props.removeTask(props.todoListId, el.id)
-        }
-
-        //удали стр 34-36 при выносе чек бокс в отдельную компоненту, переписали по новой строчкой ниже
-        const updateIsDoneHandler = (event: ChangeEvent<HTMLInputElement>) => {     // убираем ошибки красные в конс лог в хром, т.к. isDone жестко прошито (стоит или true или false). переносим в App как updateIsDone
-            props.updateIsDone(el.id, event.currentTarget.checked, props.todoListId)
-        }
-        //
-        // const updateIsDoneHandler = (newIsDone: boolean) => { //скопировали типизацию из PropsType CheckBox
-        //   props.updateIsDone(el.id, newIsDone)
-        // }
-
-        const updateTaskHandler = (newTitle: string) => {
-            props.updateTask(props.todoListId, el.id, newTitle)
-        }
-
-        return (
-            <li key={el.id} className={el.isDone ? styles.isDone : ''}>
-                <Checkbox
-                    onChange={updateIsDoneHandler}
-                    checked={el.isDone}
-                />
-
-                {/*<input type="checkbox" onChange={updateIsDoneHandler} checked={el.isDone}/> // закоментил в уроке 7 когда добавил Checkbox с material-ui.com*/}
-                {/*<CheckBox checked={el.isDone} callBack={(newIsDone) => updateIsDoneHandler(el.id, newIsDone)}/>*/}
-                {/*<span>{el.title}</span> // перенесли в новую компоненту EditableSpan*/}
-
-                <EditableSpan OLDtitle={el.title} callBack={updateTaskHandler}/>
-                <IconButton onClick={removeTaskHandler}>
-                    <Delete/>
-                </IconButton>
-                {/*<button onClick={removeTaskHandler}>X</button> // закоментил в уроке 7 когда добавил кнопку с material-ui.com*/}
-                {/*<button onClick={()=>removeTaskHandler(el.id)}>X</button>*/}
-                {/*<Button buttonName={'X'} callBack={removeTaskHandler}/>*/}
-            </li>
-        )
-    })
 
     // const addTask = () => {
     //     if (title.trim() !== '') { //добавили защиту от возможности добавления в input поля без текста (если "+" нажимаем без текста)
@@ -119,12 +80,21 @@ export function Todolist(props: PropsType) {
         props.removeTodoList(props.todoListId)
     }
 
-    const addTaskHandler = (valueTitle: string) => {
+    const addTaskHandler = useCallback((valueTitle: string) => { //  обернули (и еще 2 ф-ции "по цепочке" которые выступают коллбеками AddItemForm) в уроке 11 эту ф-цию в useCallback
         props.addTask(valueTitle, props.todoListId)
-    }
+    }, [props.addTask, props.todoListId])
 
     const updateTodoListHandler = (newTitle: string) => {
         props.updateTodoList(props.todoListId, newTitle)
+    }
+
+    let tasksForTodolist = props.tasks; // перенесли в уроке 11 ИЗ AppWithRedux, поменял некоторые моменты из dowload к уроку. Т.о. решили проблему с лишней перерисовкой при фильтрации (нажатии клавищ)
+
+    if (props.filterValueKey === 'active') { // если фильтр 'active' то, отрисуй el.isDone. Тут название свойства (фильтр) = названию метода фильтр ниже. Простое совпадение
+        tasksForTodolist = props.tasks.filter(el => el.isDone === false)
+    }
+    if (props.filterValueKey === 'completed') { // если фильтр 'active' то, отрисуй !el.isDone
+        tasksForTodolist = props.tasks.filter(el => el.isDone === true)
     }
 
     return <div>
@@ -151,8 +121,46 @@ export function Todolist(props: PropsType) {
         {/*    {error && <div className={styles.errorMessage}>Title is required</div>}*/}
         {/*</div>*/}
         <AddItemForm callBack={addTaskHandler}/>
-        <ul>
-            {mappedTasks}
+        <ul>{
+            tasksForTodolist.map((el, index) => { // отрисовываем уже отфильтрованные таски
+                const removeTaskHandler = () => {
+                    props.removeTask(props.todoListId, el.id)
+                }
+
+                //удали стр 34-36 при выносе чек бокс в отдельную компоненту, переписали по новой строчкой ниже
+                const updateIsDoneHandler = (event: ChangeEvent<HTMLInputElement>) => {     // убираем ошибки красные в конс лог в хром, т.к. isDone жестко прошито (стоит или true или false). переносим в App как updateIsDone
+                    props.updateIsDone(el.id, event.currentTarget.checked, props.todoListId)
+                }
+                //
+                // const updateIsDoneHandler = (newIsDone: boolean) => { //скопировали типизацию из PropsType CheckBox
+                //   props.updateIsDone(el.id, newIsDone)
+                // }
+
+                const updateTaskHandler = (newTitle: string) => {
+                    props.updateTask(props.todoListId, el.id, newTitle)
+                }
+
+                return (
+                    <li key={el.id} className={el.isDone ? styles.isDone : ''}>
+                        <Checkbox
+                            onChange={updateIsDoneHandler}
+                            checked={el.isDone}
+                        />
+
+                        {/*<input type="checkbox" onChange={updateIsDoneHandler} checked={el.isDone}/> // закоментил в уроке 7 когда добавил Checkbox с material-ui.com*/}
+                        {/*<CheckBox checked={el.isDone} callBack={(newIsDone) => updateIsDoneHandler(el.id, newIsDone)}/>*/}
+                        {/*<span>{el.title}</span> // перенесли в новую компоненту EditableSpan*/}
+
+                        <EditableSpan OLDtitle={el.title} callBack={updateTaskHandler}/>
+                        <IconButton onClick={removeTaskHandler}>
+                            <Delete/>
+                        </IconButton>
+                        {/*<button onClick={removeTaskHandler}>X</button> // закоментил в уроке 7 когда добавил кнопку с material-ui.com*/}
+                        {/*<button onClick={()=>removeTaskHandler(el.id)}>X</button>*/}
+                        {/*<Button buttonName={'X'} callBack={removeTaskHandler}/>*/}
+                    </li>
+                )
+            })}
         </ul>
         <div>
             <Button
@@ -179,6 +187,6 @@ export function Todolist(props: PropsType) {
 
         </div>
     </div>
-}
+})
 
 // закоментил в уроке 7 когда добавил кнопку с material-ui.com

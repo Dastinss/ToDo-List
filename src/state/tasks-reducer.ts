@@ -37,43 +37,37 @@ export const tasksReducer = (state = initialState, action: ActionType): TasksSta
             }
 
         case 'CHANGE-STATUS-TASK' : {
-            // return {  ///// ЄТОТ ВАРИАНТ НАПИСАЛИ НА ЛЕКЦИИ НЕ ИДЕТ!!! ставится одновременно галочка на всех тасках ((((
-            //     ...state,
-            //     [action.todoListId]: state[action.todoListId].map(task => task.id ? {
-            //         ...task,
-            //         isDone: action.isDone
-            //     } : task)
+            // let todolistTasks = state[action.todoListId]; /// ЄТОТ вариант взял с download // закоментил в уроке 11, написали другой ретурн, т.к. добавили React.memo а для React.memo сам массив с тасками не изменился внутри стейта, а значит по правилам иммутабельности внутри ничего не должно было поменяться. Поєтому для React.memo сам массив с тасками не изменился внутри стейта, а значит по правилам иммутабельности внутри ничего не должно было поменяться
+            // // найдём нужную таску:
+            // let task = todolistTasks.find(task => task.id === action.taskId);
+            // //изменим таску, если она нашлась
+            // if (task) {
+            //     task.isDone = action.isDone;
             // }
-
-            let todolistTasks = state[action.todoListId]; /// ЄТОТ вариант взял с download
-            // найдём нужную таску:
-            let task = todolistTasks.find(task => task.id === action.taskId);
-            //изменим таску, если она нашлась
-            if (task) {
-                task.isDone = action.isDone;
+            // return ({...state});
+            return {
+                ...state,
+                [action.todoListId]: state[action.todoListId]
+                    .map(t => t.id === action.taskId ? {...t, isDone: action.isDone} : t)
             }
-            return ({...state});
         }
 
 
         case
         'CHANGE-TITLE-TASK' : {
-            // return { ЄТОТ ВАРИАНТ НАПИСАЛИ НА ЛЕКЦИИ НЕ ИДЕТ!!! ставится одновременно галочка на всех тасках ((((
-            //     ...state,
-            //     [action.todoListId]: state[action.todoListId].map(task => task.id ? {
-            //         ...task,
-            //         title: action.title
-            //     } : task)
+            // let todolistTasks = state[action.todoListId]; /// ЄТОТ вариант взял с download // закоментил в уроке 11, написали другой ретурн, т.к. добавили React.memo а для React.memo сам массив с тасками не изменился внутри стейта, а значит по правилам иммутабельности внутри ничего не должно было поменяться. Поєтому для React.memo сам массив с тасками не изменился внутри стейта, а значит по правилам иммутабельности внутри ничего не должно было поменяться
+            // // найдём нужную таску:
+            // let task = todolistTasks.find(task => task.id === action.taskId);
+            // //изменим таску, если она нашлась
+            // if (task) {
+            //     task.title = action.title;
             // }
-
-            let todolistTasks = state[action.todoListId];
-            // найдём нужную таску:
-            let task = todolistTasks.find(task => task.id === action.taskId);
-            //изменим таску, если она нашлась
-            if (task) {
-                task.title = action.title;
+            // return ({...state});
+            return {
+                ...state,
+                [action.todoListId]: state[action.todoListId]
+                    .map(t => t.id === action.taskId ? {...t, title: action.title} : t)
             }
-            return ({...state});
         }
 
         case
