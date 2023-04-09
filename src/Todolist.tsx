@@ -11,6 +11,7 @@ import {IconButton} from '@material-ui/core';
 import {Delete} from '@material-ui/icons';
 import Button from '@material-ui/core/Button'; // прописал "через колено" - штатным способом не работало
 import Checkbox from '@material-ui/core/Checkbox';
+import {Task} from "./components/Task";
 
 
 export type TaskType = {
@@ -122,45 +123,57 @@ export const Todolist = React.memo((props: PropsType) => { // обернули �
         {/*</div>*/}
         <AddItemForm callBack={addTaskHandler}/>
         <ul>{
-            tasksForTodolist.map((el, index) => { // отрисовываем уже отфильтрованные таски
-                const removeTaskHandler = () => {
-                    props.removeTask(props.todoListId, el.id)
-                }
-
-                //удали стр 34-36 при выносе чек бокс в отдельную компоненту, переписали по новой строчкой ниже
-                const updateIsDoneHandler = (event: ChangeEvent<HTMLInputElement>) => {     // убираем ошибки красные в конс лог в хром, т.к. isDone жестко прошито (стоит или true или false). переносим в App как updateIsDone
-                    props.updateIsDone(el.id, event.currentTarget.checked, props.todoListId)
-                }
+            tasksForTodolist.map((el, index) =>
+                    <Task
+                        key={el.id}
+                        task = {el} // поставил task вместо el, чтобы совпадало с тем, что есть в шаблоне
+                        todoListId={props.todoListId}
+                        removeTask={props.removeTask}
+                        updateIsDone ={props.updateIsDone}
+                        updateTask = {props.updateTask}
+                    />
+                //ВЫНЕС В ОТДЕЛЬНУЮ КОМПОНЕНТУ TASK
+                // { // отрисовываем уже отфильтрованные таски
+                //     const removeTaskHandler = () => {
+                //         props.removeTask(props.todoListId, el.id)
+                //     }
                 //
-                // const updateIsDoneHandler = (newIsDone: boolean) => { //скопировали типизацию из PropsType CheckBox
-                //   props.updateIsDone(el.id, newIsDone)
+                //     //удали стр 34-36 при выносе чек бокс в отдельную компоненту, переписали по новой строчкой ниже
+                //     const updateIsDoneHandler = (event: ChangeEvent<HTMLInputElement>) => {     // убираем ошибки красные в конс лог в хром, т.к. isDone жестко прошито (стоит или true или false). переносим в App как updateIsDone
+                //         props.updateIsDone(el.id, event.currentTarget.checked, props.todoListId)
+                //     }
+                //     //
+                //     // const updateIsDoneHandler = (newIsDone: boolean) => { //скопировали типизацию из PropsType CheckBox
+                //     //   props.updateIsDone(el.id, newIsDone)
+                //     // }
+                //
+                //     const updateTaskHandler = (newTitle: string) => {
+                //         props.updateTask(props.todoListId, el.id, newTitle)
+                //     }
+                //
+                //     return (
+                //         <li key={el.id} className={el.isDone ? styles.isDone : ''}>
+                //             <Checkbox
+                //                 onChange={updateIsDoneHandler}
+                //                 checked={el.isDone}
+                //             />
+                //
+                //             {/*<input type="checkbox" onChange={updateIsDoneHandler} checked={el.isDone}/> // закоментил в уроке 7 когда добавил Checkbox с material-ui.com*/}
+                //             {/*<CheckBox checked={el.isDone} callBack={(newIsDone) => updateIsDoneHandler(el.id, newIsDone)}/>*/}
+                //             {/*<span>{el.title}</span> // перенесли в новую компоненту EditableSpan*/}
+                //
+                //             <EditableSpan OLDtitle={el.title} callBack={updateTaskHandler}/>
+                //             <IconButton onClick={removeTaskHandler}>
+                //                 <Delete/>
+                //             </IconButton>
+                //             {/*<button onClick={removeTaskHandler}>X</button> // закоментил в уроке 7 когда добавил кнопку с material-ui.com*/}
+                //             {/*<button onClick={()=>removeTaskHandler(el.id)}>X</button>*/}
+                //             {/*<Button buttonName={'X'} callBack={removeTaskHandler}/>*/}
+                //         </li>
+                //     )
                 // }
-
-                const updateTaskHandler = (newTitle: string) => {
-                    props.updateTask(props.todoListId, el.id, newTitle)
-                }
-
-                return (
-                    <li key={el.id} className={el.isDone ? styles.isDone : ''}>
-                        <Checkbox
-                            onChange={updateIsDoneHandler}
-                            checked={el.isDone}
-                        />
-
-                        {/*<input type="checkbox" onChange={updateIsDoneHandler} checked={el.isDone}/> // закоментил в уроке 7 когда добавил Checkbox с material-ui.com*/}
-                        {/*<CheckBox checked={el.isDone} callBack={(newIsDone) => updateIsDoneHandler(el.id, newIsDone)}/>*/}
-                        {/*<span>{el.title}</span> // перенесли в новую компоненту EditableSpan*/}
-
-                        <EditableSpan OLDtitle={el.title} callBack={updateTaskHandler}/>
-                        <IconButton onClick={removeTaskHandler}>
-                            <Delete/>
-                        </IconButton>
-                        {/*<button onClick={removeTaskHandler}>X</button> // закоментил в уроке 7 когда добавил кнопку с material-ui.com*/}
-                        {/*<button onClick={()=>removeTaskHandler(el.id)}>X</button>*/}
-                        {/*<Button buttonName={'X'} callBack={removeTaskHandler}/>*/}
-                    </li>
-                )
-            })}
+            )
+        }
         </ul>
         <div>
             <Button
