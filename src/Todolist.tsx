@@ -35,7 +35,6 @@ type PropsType = {
 }
 
 export const Todolist = React.memo((props: PropsType) => { // обернули в React.memo в уроке 11, мемо работает в связке с useCallback если есть колл беки. В данном случае колл беки есть (callBack: (valueTitle: string) => void)
-    console.log('Todolist')
     // let [title, setTitle] = useState(' ')   // создаем хук которій нам выводит из инпут введенный текст в строку ниже
     // const [error, setError] = useState(false)
     const [clickedButton, setClickedButton] = useState('all')
@@ -77,17 +76,17 @@ export const Todolist = React.memo((props: PropsType) => { // обернули �
         setClickedButton('completed')
     }
 
-    const removeTodoListHandler = () => { //создаем ф-цию по удалению ТоДоЛиста
-        props.removeTodoList(props.todoListId)
-    }
-
     const addTaskHandler = useCallback((valueTitle: string) => { //  обернули (и еще 2 ф-ции "по цепочке" которые выступают коллбеками AddItemForm) в уроке 11 эту ф-цию в useCallback
         props.addTask(valueTitle, props.todoListId)
     }, [props.addTask, props.todoListId])
 
-    const updateTodoListHandler = (newTitle: string) => {
-        props.updateTodoList(props.todoListId, newTitle)
+    const removeTodoListHandler = () => { //создаем ф-цию по удалению ТоДоЛиста
+        props.removeTodoList(props.todoListId)
     }
+
+    const updateTodoListHandler = useCallback((newTitle: string) => {
+        props.updateTodoList(props.todoListId, newTitle)
+    }, [props.updateTodoList, props.todoListId]);
 
     let tasksForTodolist = props.tasks; // перенесли в уроке 11 ИЗ AppWithRedux, поменял некоторые моменты из dowload к уроку. Т.о. решили проблему с лишней перерисовкой при фильтрации (нажатии клавищ)
 
@@ -126,11 +125,11 @@ export const Todolist = React.memo((props: PropsType) => { // обернули �
             tasksForTodolist.map((el, index) =>
                     <Task
                         key={el.id}
-                        task = {el} // поставил task вместо el, чтобы совпадало с тем, что есть в шаблоне
+                        task={el} // поставил task вместо el, чтобы совпадало с тем, что есть в шаблоне
                         todoListId={props.todoListId}
                         removeTask={props.removeTask}
-                        updateIsDone ={props.updateIsDone}
-                        updateTask = {props.updateTask}
+                        updateIsDone={props.updateIsDone}
+                        updateTask={props.updateTask}
                     />
                 //ВЫНЕС В ОТДЕЛЬНУЮ КОМПОНЕНТУ TASK
                 // { // отрисовываем уже отфильтрованные таски

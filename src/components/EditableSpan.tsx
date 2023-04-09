@@ -5,7 +5,7 @@ type PropsType = {
     callBack: (newTitle: string) => void
 }
 
-export const EditableSpan = (props: PropsType) => {
+export const EditableSpan = React.memo((props: PropsType) => {
     const [edit, setEdit] = useState(false);
     let [newTitle, setNewTitle] = useState(props.OLDtitle)   // создаем хук которій нам выводит из инпут введенный текст в строку ниже
 
@@ -34,4 +34,4 @@ export const EditableSpan = (props: PropsType) => {
             : <span onDoubleClick={onDoubleClickHandler}>{props.OLDtitle}</span>
         // {/*<span>{el.title}</span>  // старый, перенесенный тег*/}
     )
-}
+})
