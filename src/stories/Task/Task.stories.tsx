@@ -10,7 +10,7 @@ export default {
     args: {
         task: {id: '#id_done', title: 'JS', isDone: true},
         todoListId: '#toDoListId_my_storybook',
-        removeTask: action('removeTask'),
+            removeTask: action('removeTask'),
         updateIsDone: action('updateIsDone'),
         updateTask: action('updateTask')
     }
