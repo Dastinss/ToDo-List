@@ -2,10 +2,25 @@
 
 import {FilterValueTypes, TodoListType} from "../App";
 import {v1} from "uuid";
+import {TodolistType} from "../api/todolist-api";
 
-const initialState: TodoListType[] = []; // для параметра state мы задаем значение по дефолту, равное начальному состоянию. У нас это будет пустой массив
+// const initialState: TodoListType[] = []; // для параметра state мы задаем значение по дефолту, равное начальному состоянию. У нас это будет пустой массив
 
-export const TodolistsReducer = (state = initialState, action: tsarType): TodoListType[] => { // чистая ф-ция, т.е. входяшие данные не меняет, поэтому в каждый
+export type SetTodolistActionType = { //14
+    type: 'SET-TODOLISTS',
+    todoLists: TodolistType[]
+}
+
+const initialState: Array<TodolistDomainType> = [ // 14 ввел сам с/но образцу из урока 14 для параметра state мы задаем значение по дефолту, равное начальному состоянию. У нас это будет пустой массив
+    /*{id: todolistId1, title: 'What to learn', filter: 'all', addedDate: '', order: 0},
+    {id: todolistId2, title: 'What to buy', filter: 'all', addedDate: '', order: 0}*/
+]
+
+export type TodolistDomainType = TodolistType & {
+    filter: FilterValueTypes
+}
+
+export const TodolistsReducer = (state = initialState, action: tsarType): Array<TodolistDomainType> => { // чистая ф-ция, т.е. входяшие данные не меняет, поэтому в каждый
     switch (action.type) {
         case 'REMOVE-TODOLIST' : {
             return state.filter(el => el.id !== action.payload.todolistId1)
@@ -14,8 +29,18 @@ export const TodolistsReducer = (state = initialState, action: tsarType): TodoLi
         case 'ADD-TODOLIST' : {
             // let newID = v1(); // закоментил в 9 уроке, когда добавили один ИД для одного актион для двух редьюсеров
             // let newTodo: TodoListType = {id: newID, title: action.payload.newTodolistTitle, filter: 'all'}; // закоментил в 9 уроке, когда добавили один ИД для одного актион для двух редьюсеров
-            let newTodo: TodoListType = {id: action.payload.todoListId, title: action.payload.newTodolistTitle, filter: 'all'}; // добавил в 9 уроке
-            return [...state, newTodo]
+
+            // let newTodo: TodoListType = {id: action.payload.todoListId, title: action.payload.newTodolistTitle, filter: 'all', }; // добавил в 9 уроке
+            // return [...state, newTodo]
+            //
+            return [{
+                id: action.payload.todoListId,
+                title: action.payload.newTodolistTitle,
+                filter: 'all',
+                addedDate: '',
+                order: 0
+            }, ...state]
+
         }
 
         case 'CHANGE-TODOLIST-TITLE' : {
@@ -75,3 +100,9 @@ export const filterTasksAC = (todolistId2: string, newFilter: FilterValueTypes) 
         }
     } as const
 }
+
+//14 создаем (по др схеме в отличие от верхних) АС который будет устанавливать наше значение в стейте
+export const setTodolistsAC = (todoLists: Array<TodolistType>): SetTodolistActionType => {
+    return {type: 'SET-TODOLISTS', todoLists}
+}
+
