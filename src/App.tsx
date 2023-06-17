@@ -141,14 +141,6 @@ function App() {
     //пример как мультиплицировать три раза вызов массива   Todolist : let arrViktory = [0,0]
     // делее строка 75 {arrViktory.map((el) => { ....... и т.д.
 
-    // useEffect( ()=>{
-    //     todolistsAPI.getTodolists()
-    //         .then((res) => {
-    //             let todos = res.data
-    //             dispatch (setTodosAC(todos))
-    //         })
-    // }, [] )
-
     return ( //  урок 7 <ButtonAppBar/> и <Container fixed> добавил из material-ui.com. Далее для  упорядочивания <Grid container>
         <div className="App">
             <ButtonAppBar/>

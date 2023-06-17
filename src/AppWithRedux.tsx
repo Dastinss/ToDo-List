@@ -1,4 +1,4 @@
-import React, {useCallback, useReducer, useState} from 'react';
+import React, {useCallback, useEffect, useReducer, useState} from 'react';
 import './App.css';
 import {TaskType, Todolist} from "./Todolist";
 import {v1} from "uuid";
@@ -8,13 +8,14 @@ import {Container, Grid, Paper} from "@material-ui/core";
 import {
     addTodoListAC,
     filterTasksAC,
-    removeTodoListAC,
+    removeTodoListAC, setTodolistsAC,
     TodolistsReducer,
     updateTodoListAC
 } from "./state/todolists-reducer";
 import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC, tasksReducer} from "./state/tasks-reducer";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "./state/store";
+import {todolistsAPI} from "./api/todolist-api";
 
 export type FilterValueTypes = 'all' | 'active' | 'completed'
 
@@ -92,6 +93,13 @@ export function AppWithRedux() {
     const filterTasks = useCallback((todoListId: string, value: FilterValueTypes) => {
         dispatch(filterTasksAC(todoListId, value))
     }, [dispatch])
+
+    useEffect( ()=>{
+        todolistsAPI.getTodolists()
+            .then((res) => {
+                dispatch (setTodolistsAC(res.data))
+            })
+    }, [] )
 
     return (
         <div className="App">

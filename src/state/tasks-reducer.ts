@@ -2,7 +2,7 @@
 
 import {FilterValueTypes, TasksStateType, TodoListType} from "../App";
 import {v1} from "uuid";
-import {addTodoListACType} from "./todolists-reducer";
+import {addTodoListActionType, SetTodolistActionType} from "./todolists-reducer";
 
 export type RemoveTaskActionType = ReturnType<typeof removeTaskAC>
 
@@ -18,8 +18,9 @@ type ActionType = RemoveTaskActionType
     | AddTaskActionType
     | ChangeStatusTaskActionType
     | ChangeTitleTaskActionType
-    | addTodoListACType //єкспортировали тип с файла todolists-reducer
+    | addTodoListActionType //єкспортировали тип с файла todolists-reducer
     | RemoveTodolistActionType
+    | SetTodolistActionType // 14 добавил такой же тип как в тудулист редьсере для добавления массива
 
 const initialState: TasksStateType = {};
 
@@ -52,7 +53,6 @@ export const tasksReducer = (state = initialState, action: ActionType): TasksSta
             }
         }
 
-
         case
         'CHANGE-TITLE-TASK' : {
             // let todolistTasks = state[action.todoListId]; /// ЄТОТ вариант взял с download // закоментил в уроке 11, написали другой ретурн, т.к. добавили React.memo а для React.memo сам массив с тасками не изменился внутри стейта, а значит по правилам иммутабельности внутри ничего не должно было поменяться. Поєтому для React.memo сам массив с тасками не изменился внутри стейта, а значит по правилам иммутабельности внутри ничего не должно было поменяться
@@ -80,13 +80,23 @@ export const tasksReducer = (state = initialState, action: ActionType): TasksSta
 
         case
         'REMOVE-TODOLIST'
-        :
+        : {
             const copyState = {...state}
             delete copyState[action.todoListId] // удаление чеоез delete
             return copyState
 
-        // const {[action.todoListId]: [], ...rest} = {...state} // удаление чеоез деструктуризацию: выделили нужное нам свойство которое грохаем и выделяем вторую часть нашего объекта, куда будут входить оставшиеся св-ва нашего обьекта
-        // return rest
+            // const {[action.todoListId]: [], ...rest} = {...state} // удаление чеоез деструктуризацию: выделили нужное нам свойство которое грохаем и выделяем вторую часть нашего объекта, куда будут входить оставшиеся св-ва нашего обьекта
+            // return rest
+        }
+
+        case 'SET-TODOLISTS': { // // 14 добавили т.к. в тудулист редьюсер добавляем новій туду лист, соответственно,нужно добавить в каждый тудулист пустой массив для тасок
+            const stateCopy = {...state}
+            action.todoLists.forEach((el) => {
+                stateCopy[el.id] = []
+            })
+            return stateCopy;
+        }
+
 
         default:
             // throw new Error('I dont understand this type') // урок 10 закоментили, изменили на стейт,
