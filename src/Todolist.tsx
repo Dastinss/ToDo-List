@@ -1,9 +1,9 @@
 import React, {ChangeEvent, KeyboardEvent, useCallback, useState} from "react";
-import {FilterValueTypes} from "./App";
+import {FilterValueTypes} from "./AppWithRedux";
 //import {Button} from "./components/Button";
 import styles from "./Todolist.module.css"
 import {AddItemForm} from "./components/AddItemForm";
-import {EditableSpan} from "./components/EditableSpan";
+import {EditableSpan} from "./components/EditableSpan";import {TaskStatuses, TaskType} from "./api/todolist-api";
 //import {CheckBox} from "./components/CheckBox";
 // import Button from '@material-ui/core/Button'; // прописал "через колено" - штатным способом не работало
 // import DeleteIcon from '@material-ui/icons/Delete'; // прописал "через колено" - штатным способом не работало
@@ -13,13 +13,6 @@ import Button from '@material-ui/core/Button'; // прописал "через �
 import Checkbox from '@material-ui/core/Checkbox';
 import {Task} from "./components/Task";
 
-
-export type TaskType = {
-    id: string
-    title: string
-    isDone: boolean
-}
-
 type PropsType = {
     todoListId: string
     title: string
@@ -27,7 +20,8 @@ type PropsType = {
     removeTask: (todoListId: string, taskID: string) => void
     filterTasks: (todoListId: string, value: FilterValueTypes) => void
     addTask: (valueTitle: string, todoListId: string) => void
-    updateIsDone: (taskId: string, newIsDone: boolean, todoListId: string,) => void
+    // updateIsDone: (taskId: string, newIsDone: boolean, todoListId: string,) => void // 14 заменил на changeTaskStatus
+    changeTaskStatus: (id: string, status: TaskStatuses, todolistId: string) => void
     filterValueKey: FilterValueTypes
     removeTodoList: (todoListId: string) => void
     updateTask: (todoListId: string, taskID: string, newTitle: string) => void
@@ -91,10 +85,12 @@ export const Todolist = React.memo((props: PropsType) => { // обернули �
     let tasksForTodolist = props.tasks; // перенесли в уроке 11 ИЗ AppWithRedux, поменял некоторые моменты из dowload к уроку. Т.о. решили проблему с лишней перерисовкой при фильтрации (нажатии клавищ)
 
     if (props.filterValueKey === 'active') { // если фильтр 'active' то, отрисуй el.isDone. Тут название свойства (фильтр) = названию метода фильтр ниже. Простое совпадение
-        tasksForTodolist = props.tasks.filter(el => el.isDone === false)
+        // tasksForTodolist = props.tasks.filter(el => el.isDone === false) // 14 закоментил, т.к. изза isDone пошел конфликт между ТудуЛист и ТудулистАПИ
+        tasksForTodolist = props.tasks.filter(t => t.status === TaskStatuses.New)
     }
     if (props.filterValueKey === 'completed') { // если фильтр 'active' то, отрисуй !el.isDone
-        tasksForTodolist = props.tasks.filter(el => el.isDone === true)
+        // tasksForTodolist = props.tasks.filter(el => el.isDone === true) // 14 закоментил, т.к. изза isDone пошел конфликт между ТудуЛист и ТудулистАПИ
+        tasksForTodolist = props.tasks.filter(t => t.status === TaskStatuses.Completed)
     }
 
     return <div>
@@ -128,7 +124,8 @@ export const Todolist = React.memo((props: PropsType) => { // обернули �
                         task={el} // поставил task вместо el, чтобы совпадало с тем, что есть в шаблоне
                         todoListId={props.todoListId}
                         removeTask={props.removeTask}
-                        updateIsDone={props.updateIsDone}
+                        // updateIsDone={props.updateIsDone} // 14 закоментил глобально при замене IsDone на status
+                        changeTaskStatus={props.changeTaskStatus}
                         updateTask={props.updateTask}
                     />
                 //ВЫНЕС В ОТДЕЛЬНУЮ КОМПОНЕНТУ TASK

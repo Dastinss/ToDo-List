@@ -96,7 +96,9 @@ export type TaskType = {
     todoListId: string
     order: number
     addedDate: string
+    // isDone: boolean // 14 добавил сам вручную, т.к. ругалось на несоответсвие между todolists-API и tasks-Reducer
 }
+
 export type UpdateTaskModelType = {
     title: string
     description: string

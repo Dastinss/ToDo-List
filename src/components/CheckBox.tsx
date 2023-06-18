@@ -1,5 +1,6 @@
 import React, {ChangeEvent} from 'react';
-import {TaskType} from "../Todolist";
+// import {TaskType} from "../Todolist";
+import {TaskType} from "../api/todolist-api";
 
 type PropsType = {
     checked: boolean

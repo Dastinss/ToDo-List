@@ -1,8 +1,9 @@
 // Lesson # 8
 
-import {FilterValueTypes, TodoListType} from "../App";
+import AppWithRedux, {FilterValueTypes, TodoListType} from "../AppWithRedux";
 import {v1} from "uuid";
-import {TodolistType} from "../api/todolist-api";
+import {todolistsAPI, TodolistType} from "../api/todolist-api";
+import {Dispatch} from "redux";
 
 // const initialState: TodoListType[] = []; // для параметра state мы задаем значение по дефолту, равное начальному состоянию. У нас это будет пустой массив
 
@@ -122,4 +123,11 @@ export const setTodolistsAC = (todoLists: Array<TodolistType>) => {
         type: 'SET-TODOLISTS',
         todoLists
     } as const
+}
+
+export const fetchTodoListsTC = () => (dispatch: Dispatch) => { // 14 создали Thunk для общения этого редьюсера как BLL с DAL уровнем
+    todolistsAPI.getTodolists()
+        .then((res) => {
+            dispatch (setTodolistsAC(res.data))
+        })
 }
