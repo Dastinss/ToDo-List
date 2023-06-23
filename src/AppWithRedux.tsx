@@ -13,7 +13,14 @@ import {
     TodolistsReducer,
     updateTodoListAC
 } from "./state/todolists-reducer";
-import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC, tasksReducer} from "./state/tasks-reducer";
+import {
+    addTaskAC, addTaskTC,
+    changeTaskStatusAC,
+    changeTaskTitleAC,
+    removeTaskAC,
+    removeTaskTC,
+    tasksReducer, updateTaskTC
+} from "./state/tasks-reducer";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType, useAppDispatch} from "./state/store";
 import {todolistsAPI} from "./api/todolist-api";
@@ -60,14 +67,16 @@ export function AppWithRedux() {
     // const dispatch = useDispatch(); // метод стора диспатч, вызов которого спровоцирует\оживит работу нашего флакс круговорота, соотве-но изменение нашего стейта и нашего UI
     const dispatch = useAppDispatch(); //14 вместо useDispatch прописали переменную, которой присвоиди в стор хук useDispatch и УЖЕ там же его вызвали
 
-    const removeTask = useCallback((todoListId: string, taskId: string) => {
+    const removeTask = useCallback((taskId: string, todoListId: string) => {
         // let action = removeTaskAC(taskId, todoListId)
         // dispatchTask1(action)
-        dispatch(removeTaskAC(taskId, todoListId))
-    }, [dispatch])
+        // dispatch(removeTaskAC(taskId, todoListId)) // 14 заменили на санки. Ранее при клике на иконку корзины, и сразу диспатчим экшен на изменение в глобальном стейте нужной таски
+        dispatch(removeTaskTC(taskId, todoListId))  // 14 из компоненты будем диспатчить нашу санку- в которую предварително сделаем запрос на обновление на сервер, и только потом (then) отправим уже экшен в redux
+    }, [])
 
-    const addTask = useCallback((valueTitle: string, todoListId: string) => { // обернули (и еще 2 ф-ции "по цепочке") в уроке 11 эту ф-цию в useCallback. Эта ф-ция идет "по цепочке", т.к. выступвет родительской копонентой по отношению к дочерней в ТудуЛист addTaskHandler и передает туда пропсы
-        dispatch(addTaskAC(valueTitle, todoListId))
+    const addTask = useCallback((title: string, todoListId: string) => { // обернули (и еще 2 ф-ции "по цепочке") в уроке 11 эту ф-цию в useCallback. Эта ф-ция идет "по цепочке", т.к. выступвет родительской копонентой по отношению к дочерней в ТудуЛист addTaskHandler и передает туда пропсы
+        // dispatch(addTaskAC(title, todoListId)) // 14 закоментили т.к. заменили єтот блок на Thunk
+        dispatch(addTaskTC(todoListId, title)) // 14 добавли т.к. получаем таску с сервера, а не создаем ее вручную
     }, [dispatch])
 
     // const updateIsDone = useCallback((taskId: string, newIsDone: boolean, todoListId: string,) => {
@@ -75,8 +84,9 @@ export function AppWithRedux() {
     // }, [dispatch])
 
     const changeStatus = useCallback(function (id: string, status: TaskStatuses, todolistId: string) {
-        const action = changeTaskStatusAC(id, status, todolistId);
-        dispatch(action);
+        // const action = changeTaskStatusAC(id, status, todolistId); // 14
+        // dispatch(action);
+        dispatch(updateTaskTC(todolistId, id, status))
     }, []);
 
     const updateTask = useCallback((todoListId: string, taskID: string, newTitle: string) => {

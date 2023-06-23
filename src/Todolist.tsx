@@ -1,9 +1,10 @@
-import React, {ChangeEvent, KeyboardEvent, useCallback, useState} from "react";
+import React, {ChangeEvent, KeyboardEvent, useCallback, useEffect, useState} from "react";
 import {FilterValueTypes} from "./AppWithRedux";
 //import {Button} from "./components/Button";
 import styles from "./Todolist.module.css"
 import {AddItemForm} from "./components/AddItemForm";
-import {EditableSpan} from "./components/EditableSpan";import {TaskStatuses, TaskType} from "./api/todolist-api";
+import {EditableSpan} from "./components/EditableSpan";
+import {TaskStatuses, TaskType} from "./api/todolist-api";
 //import {CheckBox} from "./components/CheckBox";
 // import Button from '@material-ui/core/Button'; // прописал "через колено" - штатным способом не работало
 // import DeleteIcon from '@material-ui/icons/Delete'; // прописал "через колено" - штатным способом не работало
@@ -12,6 +13,8 @@ import {Delete} from '@material-ui/icons';
 import Button from '@material-ui/core/Button'; // прописал "через колено" - штатным способом не работало
 import Checkbox from '@material-ui/core/Checkbox';
 import {Task} from "./components/Task";
+import {fetchTasksTC} from "./state/tasks-reducer";
+import {useAppDispatch} from "./state/store";
 
 type PropsType = {
     todoListId: string
@@ -32,6 +35,12 @@ export const Todolist = React.memo((props: PropsType) => { // обернули �
     // let [title, setTitle] = useState(' ')   // создаем хук которій нам выводит из инпут введенный текст в строку ниже
     // const [error, setError] = useState(false)
     const [clickedButton, setClickedButton] = useState('all')
+
+    const dispatch = useAppDispatch()
+
+    useEffect(() => { // 14  задиспатчили санку (вызвав санк-криетор и передав туда свою id) для подгружать таски для наших тудулистов
+        dispatch(fetchTasksTC(props.todoListId))
+    }, [])
 
     // const updateIsDoneHandler = (elId: string, newIsDone: boolean) => { //скопировали типизацию из PropsType CheckBox
     //     props.updateIsDone(elId, newIsDone)
